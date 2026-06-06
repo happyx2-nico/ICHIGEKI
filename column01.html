@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>現場が動かない、その本当の理由 | Happy Happy Nico コラム</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --green-deep:#0a3320; --green-dark:#0f4a2e; --green-mid:#1a6b3c;
+    --green-bright:#2d9b5a; --green-light:#4dc778; --green-pale:#c8f0d8;
+    --gold:#f0c040; --gold-light:#fde88a; --white:#f8fff4;
+    --accent:#2d9b5a;
+  }
+  html { scroll-behavior:smooth; }
+  body { font-family:'Noto Sans JP',sans-serif; background:#f4faf6; color:#1a2e20; font-size:18px; line-height:1.9; }
+
+  /* NAV */
+  .top-nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(10,51,32,0.95); backdrop-filter:blur(10px);
+    padding:0.9rem 2rem; display:flex; justify-content:space-between; align-items:center;
+    border-bottom:1px solid rgba(45,155,90,0.3);
+  }
+  .top-nav-logo { text-decoration:none; }
+  .top-nav-logo img { height:32px; width:auto; display:block; }
+  .top-nav-back {
+    font-size:0.88rem; color:var(--green-pale); text-decoration:none;
+    display:flex; align-items:center; gap:0.4rem; transition:color 0.2s;
+  }
+  .top-nav-back:hover { color:var(--gold); }
+
+  /* HERO */
+  .col-hero {
+    min-height:60vh; display:flex; align-items:flex-end;
+    padding:8rem 2rem 4rem;
+    background:linear-gradient(135deg, #0a3320 0%, #1a5c35 50%, #0f3d22 100%);
+    position:relative; overflow:hidden;
+  }
+  .col-hero::before {
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(to bottom, rgba(10,51,32,0.3) 0%, rgba(10,51,32,0.75) 100%);
+  }
+  .col-hero-inner { position:relative; z-index:1; max-width:800px; margin:0 auto; width:100%; }
+  .col-series {
+    display:inline-block; font-size:12px; letter-spacing:0.35em; text-transform:uppercase;
+    color:var(--gold); border:1px solid rgba(240,192,64,0.5);
+    padding:4px 14px; border-radius:50px; margin-bottom:1.2rem;
+  }
+  .col-title {
+    font-family:'Noto Serif JP',serif; font-weight:900;
+    font-size:clamp(1.8rem,5vw,3.5rem); color:#fff; line-height:1.25; margin-bottom:1rem;
+  }
+  .col-lead {
+    font-size:clamp(1rem,2.2vw,1.2rem); color:rgba(200,240,216,0.9);
+    line-height:1.8; max-width:640px;
+  }
+  .col-meta {
+    margin-top:2rem; display:flex; gap:1.5rem; align-items:center; flex-wrap:wrap;
+  }
+  .col-meta-item { font-size:0.85rem; color:rgba(200,240,216,0.6); display:flex; align-items:center; gap:0.4rem; }
+
+  /* BODY */
+  .col-body {
+    max-width:760px; margin:0 auto; padding:5rem 2rem 6rem;
+  }
+
+  /* テキスト要素 */
+  .col-body h2 {
+    font-family:'Noto Serif JP',serif; font-weight:900;
+    font-size:clamp(1.4rem,3vw,2rem); color:var(--green-dark);
+    margin:3.5rem 0 1.2rem; padding-bottom:0.6rem;
+    border-bottom:2px solid var(--green-bright);
+    line-height:1.4;
+  }
+  .col-body h3 {
+    font-family:'Noto Serif JP',serif; font-weight:700;
+    font-size:1.2rem; color:var(--green-mid); margin:2.5rem 0 0.8rem;
+  }
+  .col-body p { margin-bottom:1.6rem; font-size:1.05rem; color:#253020; line-height:2; }
+  .col-body p.large { font-size:1.15rem; font-weight:500; color:#1a2e20; }
+  .col-body strong { color:var(--green-dark); font-weight:700; }
+
+  /* 引用ボックス */
+  .quote-box {
+    background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%);
+    border-radius:16px; padding:2.5rem; margin:3rem 0; position:relative; overflow:hidden;
+  }
+  .quote-box::before {
+    content:'"'; position:absolute; top:-1rem; left:1.5rem;
+    font-size:10rem; color:rgba(255,255,255,0.06);
+    font-family:'Noto Serif JP',serif; line-height:1; user-select:none;
+  }
+  .quote-box p {
+    font-family:'Noto Serif JP',serif; font-size:clamp(1.1rem,2.5vw,1.5rem);
+    font-weight:700; color:#fff; line-height:1.75; margin:0; position:relative; z-index:1;
+  }
+  .quote-box cite {
+    display:block; margin-top:1rem; font-size:0.85rem; color:var(--green-pale);
+    font-style:normal; position:relative; z-index:1;
+  }
+
+  /* 強調ボックス */
+  .highlight-box {
+    background:#fff; border:1px solid #c8e8d4; border-left:4px solid var(--green-bright);
+    border-radius:0 12px 12px 0; padding:1.5rem 1.8rem; margin:2.5rem 0;
+  }
+  .highlight-box p { margin:0; font-size:1rem; color:#253020; }
+
+  /* 数値インパクト */
+  .stat-inline {
+    display:inline-block; font-family:'Bebas Neue',sans-serif;
+    font-size:2.5rem; color:var(--green-bright); line-height:1;
+    vertical-align:middle; margin:0 0.2rem;
+  }
+
+  /* データカード */
+  .data-row {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:1.2rem; margin:2.5rem 0;
+  }
+  .data-card {
+    background:#fff; border:1px solid #c8e8d4; border-radius:14px;
+    padding:1.4rem; text-align:center;
+    box-shadow:0 2px 12px rgba(45,155,90,0.08);
+  }
+  .data-card-num {
+    font-family:'Bebas Neue',sans-serif; font-size:2.8rem;
+    color:var(--green-bright); line-height:1; margin-bottom:0.3rem;
+  }
+  .data-card-label { font-size:0.88rem; color:#4a6050; line-height:1.5; }
+
+  /* リスト */
+  .col-list { list-style:none; margin:1.5rem 0 2rem; padding:0; }
+  .col-list li {
+    padding:0.6rem 0 0.6rem 1.6rem; position:relative;
+    font-size:1.02rem; color:#253020; border-bottom:1px solid #e0f0e6; line-height:1.8;
+  }
+  .col-list li::before {
+    content:'›'; position:absolute; left:0; color:var(--green-bright);
+    font-weight:700; font-size:1.2rem; line-height:1.6;
+  }
+  .col-list li:last-child { border-bottom:none; }
+
+  /* セパレーター */
+  .col-sep {
+    width:60px; height:3px; background:var(--green-bright);
+    margin:3rem 0; border-radius:2px;
+  }
+
+  /* CTA */
+  .col-cta {
+    background:linear-gradient(135deg,var(--green-dark) 0%,#0a3320 100%);
+    border-radius:20px; padding:3rem; margin-top:5rem; text-align:center;
+  }
+  .col-cta h3 {
+    font-family:'Noto Serif JP',serif; font-size:1.5rem; font-weight:900;
+    color:#fff; margin-bottom:0.8rem; border:none; padding:0;
+  }
+  .col-cta p { color:var(--green-pale); margin-bottom:1.8rem; font-size:0.98rem; }
+  .col-cta-btn {
+    display:inline-block; background:var(--gold); color:var(--green-dark);
+    font-weight:700; font-size:1rem; padding:0.9rem 2.2rem;
+    border-radius:50px; text-decoration:none;
+    transition:transform 0.2s, box-shadow 0.2s;
+    box-shadow:0 4px 24px rgba(240,192,64,0.35);
+  }
+  .col-cta-btn:hover { transform:translateY(-2px); box-shadow:0 8px 36px rgba(240,192,64,0.5); }
+
+  /* 前後ナビ */
+  .col-nav {
+    display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;
+    max-width:760px; margin:0 auto; padding:0 2rem 5rem;
+  }
+  @media(max-width:560px){ .col-nav { grid-template-columns:1fr; } }
+  .col-nav-link {
+    background:#fff; border:1px solid #c8e8d4; border-radius:14px;
+    padding:1.2rem 1.5rem; text-decoration:none;
+    transition:transform 0.2s, box-shadow 0.2s;
+    display:flex; flex-direction:column; gap:0.3rem;
+  }
+  .col-nav-link:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(45,155,90,0.12); }
+  .col-nav-link.next { text-align:right; }
+  .col-nav-label { font-size:0.8rem; color:#7aaa8a; letter-spacing:0.15em; text-transform:uppercase; }
+  .col-nav-title { font-size:0.95rem; font-weight:700; color:var(--green-dark); line-height:1.5; }
+
+  /* FOOTER */
+  .col-footer {
+    background:#0a3320; text-align:center; padding:3rem 2rem;
+    border-top:1px solid rgba(45,155,90,0.3);
+  }
+  .col-footer img { height:70px; width:auto; margin:0 auto 1rem; display:block; opacity:0.85; }
+  .col-footer p { font-size:0.85rem; color:rgba(200,240,216,0.35); }
+
+  /* Reveal */
+  .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+
+  @media(max-width:640px){
+    .col-body { padding:3rem 1.5rem 4rem; }
+    .quote-box { padding:1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="happyhappynico.html" class="top-nav-logo">
+    <img src="Hx2NロゴG3.png" alt="Happy Happy Nico">
+  </a>
+  <a href="happyhappynico.html" class="top-nav-back">← ホームへ戻る</a>
+</nav>
+
+<header class="col-hero">
+  <div class="col-hero-inner">
+    <span class="col-series">Column 01 ／ 5</span>
+    <h1 class="col-title">現場が動かない、その本当の理由</h1>
+    <p class="col-lead">戦略は正しい。資料も完璧だ。それでも現場は動かない。その「なぜ」の正体に、初めて向き合う。</p>
+    <div class="col-meta">
+      <span class="col-meta-item">✍ 末岡 良章（Happy Happy Nico）</span>
+      <span class="col-meta-item">📖 読了 約4分</span>
+      <span class="col-meta-item">🎯 経営層・HR・HRBP向け</span>
+    </div>
+  </div>
+</header>
+
+<article class="col-body">
+
+  <p class="large reveal">あなたの組織でも、こんな経験はないだろうか。</p>
+
+  <p class="reveal">「現場が動かない」</p>
+
+  <p class="reveal">丁寧に説明した。資料も整えた。期待へのメッセージも出した。それでも——現場は動かなかった。「なぜ伝わらないのか」。そのたびに頭を抱え、また次の説明の機会を探す。いつのまにか、経営層であるあなたの時間の多くが「動かない現場への対応」に費やされていく。</p>
+
+  <div class="quote-box reveal">
+    <p>「動かないのではない。動けないのだ。」</p>
+  </div>
+
+  <p class="reveal">その要因の一つが、組織風土だ。</p>
+
+  <div class="col-sep reveal"></div>
+
+  <h2 class="reveal">組織風土とは何か</h2>
+
+  <p class="reveal">組織風土とは、<strong>「組織に刷り込まれた、明文化されていない慣習」</strong>のことだ。ルールブックには書かれていない。でも確かに存在する、空気のようなもの。誰かが言ったわけでもないのに「うちではそういうものだ」という感覚——それが組織風土だ。</p>
+
+  <p class="reveal">長年かけて積み上げられたこの風土は、新しい取り組みへの強力なブレーキとして機能する。新しい仕組みを導入しても、新たな改革を打ち出しても、現場の行動が変わらないのは、多くの場合この風土が壁になっているからだ。</p>
+
+  <div class="quote-box reveal">
+    <p>変革の70%は、戦略でも予算でもなく<br>「組織風土」が原因で失敗する。<br><cite style="font-size:0.75rem; margin-top:0.8rem;">参考：mooncamp.com / change-management-statistics</cite></p>
+  </div>
+
+  <p class="reveal">これが現実だ。</p>
+
+  <h2 class="reveal">「思い通りにならない」の正体</h2>
+
+  <p class="reveal">ここに一つの罠がある。「組織風土が悪い」という言い方は、往々にして「なぜかうまくいかない」という現象を、抽象的な言葉に押し込んでいるにすぎない。</p>
+
+  <p class="reveal">抽象的なままでは、打ち手が見えない。「風土改革だ」と掛け声をかけても、現場には何をすればいいかわからない。経営層が発信するメッセージと、現場が受け取る意味の間に、大きな溝が生まれる。</p>
+
+  <div class="highlight-box reveal">
+    <p>組織風土を変えるとは、「空気を変える」ことではない。<strong>一人ひとりの行動を変えること</strong>だ。そのためには、まず「現場の感情」に向き合うことから始まる。</p>
+  </div>
+
+  <p class="reveal">しかし、多くの改革は仕組みづくりや構造改革に注力する。そして、現場の感情が置き去りになる——これが「動けない現場」の正体だ。</p>
+
+  <p class="reveal">データは「何が起きているか」を教えてくれる。しかし「なぜ起きているか」「どんな感情がそこにあるか」は見えない。それは信頼関係を築いた上での対話でしか拾えない。現場の声なき声に耳を傾けること——それが、すべての出発点だ。</p>
+
+  <p class="reveal">次回は、変革をここまで難しくしている「人間の本能」というブレーキに迫る。</p>
+
+
+  <div class="col-cta reveal">
+    <h3>現場の「感情」を、動かしてみませんか？</h3>
+    <p>まずは現状を聞かせてください。DIG（現状調査）は無料でご相談いただけます。</p>
+    <a href="happyhappynico.html#contact" class="col-cta-btn">無料相談はこちら →</a>
+  </div>
+</article>
+
+<nav class="col-nav">
+  <div></div>
+  <a href="column02.html" class="col-nav-link next"><span class="col-nav-label">Next →</span><span class="col-nav-title">変革が失敗する本当の理由<br>人間の本能というブレーキ</span></a>
+</nav>
+
+<footer class="col-footer">
+  <img src="Hx2NロゴG3.png" alt="Happy Happy Nico">
+  <p>© 2025 Happy Happy Nico ／ 末岡 良章</p>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e,i) => {
+      if(e.isIntersecting){
+        setTimeout(()=>e.target.classList.add('visible'), i*80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.07});
+  reveals.forEach(r=>obs.observe(r));
+</script>
+</body>
+</html>
