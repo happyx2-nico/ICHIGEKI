@@ -436,7 +436,6 @@
 
   /* ===== OUTCOME ===== */
   .outcome-section { background: var(--green-deep); text-align:center; }
-  .outcome-big { font-family:'Bebas Neue',sans-serif; font-size:clamp(5rem,18vw,12rem); color:var(--gold); line-height:1; text-shadow:0 0 80px rgba(240,192,64,0.3); margin:2rem 0; }
   .outcome-list { display:flex; flex-direction:column; gap:1.2rem; max-width:600px; margin:3rem auto; text-align:left; }
   .outcome-item { display:flex; gap:1rem; align-items:flex-start; font-size:1.1rem; line-height:1.7; }
   .outcome-icon { width:32px; height:32px; border-radius:50%; background:var(--green-bright); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1rem; color:var(--green-deep); font-weight:700; margin-top:2px; }
@@ -540,21 +539,6 @@
 
 
 
-  /* ===== SESSION FEATURES ===== */
-  .session-features {
-    display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem;
-    max-width:760px; margin:2.5rem auto 0;
-  }
-  @media(max-width:640px){ .session-features { grid-template-columns:1fr; } }
-  .session-feature {
-    background:var(--green-dark); border:1px solid var(--green-mid);
-    border-radius:14px; padding:1.5rem 1.2rem; text-align:center;
-    transition:border-color 0.25s, transform 0.25s;
-  }
-  .session-feature:hover { border-color:var(--gold); transform:translateY(-4px); }
-  .session-feature-icon { font-size:2rem; margin-bottom:0.7rem; }
-  .session-feature-text { font-size:0.92rem; color:var(--green-pale); line-height:1.8; }
-  .session-feature-text strong { color:var(--gold-light); font-size:1.05rem; display:block; margin-bottom:0.3rem; }
 
 
   /* ===== DIALOGUE SECTION ===== */
@@ -1165,7 +1149,6 @@
     <div class="reveal">
       <span class="section-tag">What Changes</span>
       <h2 class="section-title">組織風土が変わると</h2>
-      <div class="outcome-big">36%<span style="font-size:clamp(2rem,6vw,4.5rem);letter-spacing:0.05em;">UP</span></div>
       <div class="outcome-list">
         <div class="outcome-item">
           <div class="outcome-icon">✓</div>
@@ -1294,23 +1277,9 @@
     <div class="reveal text-center">
       <span class="section-tag">Free Session</span>
       <h2 class="section-title">組織の声なき声、<br>聞かせてください</h2>
-      <p class="section-lead"><strong style="color:var(--gold-light); font-size:1.15em;">60分無料対話セッション</strong><br>売り込みは、一切しません。ただ、あなたの組織の話を聞かせてください。<br>対話の力を、まず体感していただくための60分です。</p>
+      <p class="section-lead"><strong style="color:var(--gold-light); font-size:1.15em;">60分無料対話セッション</strong><br>まずは、あなたの組織の悩み事をお聞かせください。<br>どのような「対話」を現場に届ければ組織が本来の力を発揮するのか、<br>解決の糸口を一緒に考えましょう。</p>
     </div>
 
-    <div class="session-features reveal">
-      <div class="session-feature">
-        <div class="session-feature-icon">🚫</div>
-        <div class="session-feature-text"><strong>売り込みゼロ</strong>提案書も見積もりも持ち込みません</div>
-      </div>
-      <div class="session-feature">
-        <div class="session-feature-icon">👂</div>
-        <div class="session-feature-text"><strong>ただ、聞く60分</strong>組織のモヤモヤを言葉にする時間</div>
-      </div>
-      <div class="session-feature">
-        <div class="session-feature-icon">🎁</div>
-        <div class="session-feature-text"><strong>持ち帰りは自由</strong>対話で見えた気づきはすべて差し上げます</div>
-      </div>
-    </div>
     <div class="contact-card reveal">
       <form id="contact-form" action="https://formspree.io/f/xeewkpnr" method="POST">
         <div class="contact-row">
