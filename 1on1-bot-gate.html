@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1on1 お困りごと相談室｜購入者特典</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Hiragino Maru Gothic ProN', 'BIZ UDPGothic', sans-serif;
+    background: #F4F9EC;
+    color: #2b2b2b;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+
+  /* ===== パスワードロック画面 ===== */
+  #lockScreen {
+    position: fixed; inset: 0; background: #27500A;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; padding: 24px;
+  }
+  #lockScreen .card {
+    background: #fff; border-radius: 20px; padding: 40px 32px;
+    max-width: 360px; width: 100%; text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  }
+  #lockScreen .leaf { font-size: 48px; display: block; margin-bottom: 16px; }
+  #lockScreen h2 { font-size: 18px; font-weight: 900; color: #27500A; margin-bottom: 8px; }
+  #lockScreen p.sub { font-size: 13px; color: #888; margin-bottom: 20px; }
+  #pwInput {
+    width: 100%; padding: 12px 16px; border: 2px solid #C0DD97;
+    border-radius: 10px; font-size: 15px; margin-bottom: 12px;
+    box-sizing: border-box; font-family: inherit;
+  }
+  #pwInput:focus { outline: none; border-color: #3B6D11; }
+  #lockScreen button {
+    width: 100%; padding: 12px; background: #3B6D11; color: #fff;
+    border: none; border-radius: 10px; font-size: 15px; font-weight: 900;
+    cursor: pointer; font-family: inherit; transition: background .2s;
+  }
+  #lockScreen button:hover { background: #2b530c; }
+  #pwError { display: none; color: #e74c3c; font-size: 13px; margin-top: 10px; }
+  #pwHint { font-size: 12px; color: #aaa; margin-top: 16px; }
+
+  /* ===== 本体 ===== */
+  .hero {
+    background: linear-gradient(160deg, #3B6D11 0%, #27500A 100%);
+    color: #fff; text-align: center; padding: 56px 24px 48px;
+  }
+  .hero .emoji { font-size: 52px; display: block; margin-bottom: 12px; }
+  .hero h1 { font-size: 26px; font-weight: 900; margin-bottom: 12px; line-height: 1.4; }
+  .hero h1 span { color: #DCEBB8; }
+  .hero .sub { font-size: 15px; opacity: 0.92; }
+  .hero .authors {
+    display: inline-block; margin-top: 20px; background: rgba(255,255,255,0.15);
+    border: 2px solid #97C459; border-radius: 99px; padding: 7px 24px;
+    font-size: 14px; font-weight: 700;
+  }
+
+  .wrap { max-width: 640px; margin: 0 auto; padding: 40px 24px 60px; }
+
+  .lead {
+    font-size: 16px; text-align: center; color: #3a3a3a;
+    margin-bottom: 36px;
+  }
+  .lead strong { color: #3B6D11; }
+
+  /* botへ進むカード */
+  .bot-card {
+    background: #fff; border: 2px solid #C0DD97; border-radius: 18px;
+    padding: 32px 28px; text-align: center;
+    box-shadow: 0 6px 24px rgba(59,109,17,0.10);
+    margin-bottom: 40px;
+  }
+  .bot-card .icon { font-size: 40px; display: block; margin-bottom: 14px; }
+  .bot-card h3 { font-size: 19px; font-weight: 900; color: #27500A; margin-bottom: 10px; }
+  .bot-card p { font-size: 14px; color: #666; margin-bottom: 22px; }
+  .bot-btn {
+    display: inline-block; background: #3B6D11; color: #fff;
+    text-decoration: none; font-weight: 900; font-size: 16px;
+    padding: 15px 40px; border-radius: 99px; transition: transform .15s, background .2s;
+    box-shadow: 0 4px 14px rgba(59,109,17,0.3);
+  }
+  .bot-btn:hover { background: #2b530c; transform: translateY(-2px); }
+
+  /* 使い方 */
+  .how { margin-bottom: 40px; }
+  .how h3 {
+    font-size: 16px; font-weight: 900; color: #27500A; margin-bottom: 16px;
+    text-align: center;
+  }
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step {
+    background: #fff; border-radius: 12px; padding: 16px 18px;
+    display: flex; gap: 14px; align-items: flex-start;
+    border: 1px solid #E3EFCF;
+  }
+  .step .num {
+    flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+    background: #97C459; color: #fff; font-weight: 900; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step .txt { font-size: 14px; color: #444; }
+  .step .txt b { color: #3B6D11; }
+
+  .note {
+    background: #EAF3DE; border-radius: 12px; padding: 18px 20px;
+    font-size: 13px; color: #55632f; line-height: 1.8;
+  }
+  .note b { color: #3B6D11; }
+
+  footer {
+    text-align: center; font-size: 12px; color: #9aa886;
+    padding: 28px 24px 40px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== パスワードロック ===== -->
+<div id="lockScreen">
+  <div class="card">
+    <span class="leaf">🍀</span>
+    <h2>合言葉を入力してください</h2>
+    <p class="sub">『1on1の困りごと』ご購入者さま専用ページです</p>
+    <input type="password" id="pwInput" placeholder="合言葉">
+    <button onclick="checkPw()">入室する</button>
+    <p id="pwError">合言葉が違うようです…もう一度！</p>
+    <p id="pwHint">合言葉は書籍・特典資料に記載されています</p>
+  </div>
+</div>
+
+<!-- ===== ヒーロー ===== -->
+<div class="hero">
+  <span class="emoji">🍀</span>
+  <h1>1on1 <span>お困りごと相談室</span></h1>
+  <p class="sub">現場が教えてくれた "乗り越える知恵" より</p>
+  <div class="authors">末岡 良章 ｜ Happy Happy Nico</div>
+</div>
+
+<div class="wrap">
+  <p class="lead">
+    55本の知恵をもとに、あなたの1on1のお悩みに<br>
+    <strong>明日から使える打ち手</strong>をお返しする相談botです。
+  </p>
+
+  <!-- botへ進むカード -->
+  <div class="bot-card">
+    <span class="icon">💬</span>
+    <h3>相談をはじめる</h3>
+    <p>立場を選んで、困っている場面を話しかけてみてください。</p>
+    <!-- ▼▼▼ ここに、あなたのbot（Artifact）のURLを入れてください ▼▼▼ -->
+    <a class="bot-btn" id="botLink" href="https://claude.ai/public/artifacts/db93ab36-55ec-4ff2-a226-54e6d32cd4a4" target="_blank" rel="noopener">
+      相談室を開く →
+    </a>
+    <!-- ▲▲▲ href="..." のURLを差し替えるだけ ▲▲▲ -->
+  </div>
+
+  <!-- 使い方 -->
+  <div class="how">
+    <h3>かんたんな使い方</h3>
+    <div class="steps">
+      <div class="step">
+        <span class="num">1</span>
+        <span class="txt">上の<b>「相談室を開く」</b>ボタンを押すと、相談botが開きます。</span>
+      </div>
+      <div class="step">
+        <span class="num">2</span>
+        <span class="txt">画面上部で<b>あなたと相手の立場</b>（部長クラス以上／課長クラス／リーダー／メンター／メンバー）を選びます。</span>
+      </div>
+      <div class="step">
+        <span class="num">3</span>
+        <span class="txt">困っている<b>場面や、うまくいかないと感じている点</b>を話しかけてください。</span>
+      </div>
+      <div class="step">
+        <span class="num">4</span>
+        <span class="txt">55本の知恵をもとに、受けとめ・考え方・具体的な打ち手・問いの例が返ってきます。<b>（参考にした知恵の番号つき）</b></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>🍀 このbotについて</b><br>
+    『1on1の困りごと 現場が教えてくれた"乗り越える知恵"』の考え方を軸に、コーチングの理論とICF倫理を土台として応答します。AIによる参考意見ですので、最終的なご判断はぜひ現場の感覚も大切になさってください。
+  </div>
+</div>
+
+<footer>
+  © Happy Happy Nico ｜ 末岡 良章<br>
+  本ページおよびbotの内容の無断転載・再配布はご遠慮ください。
+</footer>
+
+<script>
+  // ===== 合言葉（ここを変更してください） =====
+  var CORRECT_PW = "nico55";
+
+  (function() {
+    if (sessionStorage.getItem("nico_unlocked") === "true") {
+      document.getElementById("lockScreen").style.display = "none";
+    }
+  })();
+
+  function checkPw() {
+    var input = document.getElementById("pwInput").value.trim();
+    if (input === CORRECT_PW) {
+      sessionStorage.setItem("nico_unlocked", "true");
+      document.getElementById("lockScreen").style.display = "none";
+    } else {
+      document.getElementById("pwError").style.display = "block";
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var input = document.getElementById("pwInput");
+    if (input) {
+      input.focus();
+      input.addEventListener("keypress", function(e) {
+        if (e.key === "Enter") checkPw();
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
