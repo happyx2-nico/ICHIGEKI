@@ -111,6 +111,21 @@
   }
   .note b { color: #3B6D11; }
 
+  /* Q&Aリスト活用の案内 */
+  .qa-tip {
+    background: #fff; border: 2px dashed #97C459; border-radius: 16px;
+    padding: 22px 22px; margin-bottom: 40px;
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .qa-tip .qa-icon { font-size: 32px; flex-shrink: 0; line-height: 1.2; }
+  .qa-tip h3 { font-size: 16px; font-weight: 900; color: #27500A; margin-bottom: 10px; }
+  .qa-tip p { font-size: 14px; color: #4d4d4d; margin-bottom: 8px; }
+  .qa-tip p.qa-sub { font-size: 13px; color: #77855a; margin-bottom: 0; }
+  .qa-tip b { color: #3B6D11; }
+  @media (max-width: 480px) {
+    .qa-tip { flex-direction: column; gap: 10px; }
+  }
+
   footer {
     text-align: center; font-size: 12px; color: #9aa886;
     padding: 28px 24px 40px;
@@ -151,11 +166,10 @@
     <span class="icon">💬</span>
     <h3>相談をはじめる</h3>
     <p>立場を選んで、困っている場面を話しかけてみてください。</p>
-    <!-- ▼▼▼ ここに、あなたのbot（Artifact）のURLを入れてください ▼▼▼ -->
-    <a class="bot-btn" id="botLink" href="https://claude.ai/public/artifacts/db93ab36-55ec-4ff2-a226-54e6d32cd4a4" target="_blank" rel="noopener">
+    <!-- URLは直書きせず、合言葉入力後にJavaScriptで組み立てられます -->
+    <a class="bot-btn" id="botLink" href="#" target="_blank" rel="noopener">
       相談室を開く →
     </a>
-    <!-- ▲▲▲ href="..." のURLを差し替えるだけ ▲▲▲ -->
   </div>
 
   <!-- 使い方 -->
@@ -181,6 +195,23 @@
     </div>
   </div>
 
+  <!-- Q&Aリスト活用の案内 -->
+  <div class="qa-tip">
+    <span class="qa-icon">📋</span>
+    <div>
+      <h3>相談の記録が、あなただけの「1on1困りごと事典」に</h3>
+      <p>
+        相談を重ねたあと、画面上部の<b>「Q&amp;Aをコピー」</b>ボタンを押すと、
+        これまでのやりとりが <b>Q（あなたの相談）</b>と<b>A（相談室からの答え）</b>の一覧になります。
+        そのまま <b>Excelやスプレッドシートに貼り付ける</b>と、きれいに表になって残せます。
+      </p>
+      <p class="qa-sub">
+        困ったこと・もらった打ち手を貼りためていくと、あなたのチームならではの
+        「1on1お困りごとリスト」が育っていきます。振り返りや、同じ立場の仲間との共有にもどうぞ。
+      </p>
+    </div>
+  </div>
+
   <div class="note">
     <b>🍀 このbotについて</b><br>
     『1on1の困りごと 現場が教えてくれた"乗り越える知恵"』の考え方を軸に、コーチングの理論とICF倫理を土台として応答します。AIによる参考意見ですので、最終的なご判断はぜひ現場の感覚も大切になさってください。
@@ -193,20 +224,67 @@
 </footer>
 
 <script>
-  // ===== 合言葉（ここを変更してください） =====
-  var CORRECT_PW = "nico55";
+  // ===== 設定：合言葉は複数登録できる（回ごとに使い分け） =====
+  // 各行が1つの合言葉。encrypt-tool.html で hash と enc を生成して差し替え・追加・削除できる。
+  // 無効化したい合言葉は、その行を削除（またはコメントアウト）するだけ。他の合言葉には影響しない。
+  var KEYS = [
+    { label: "合言葉1", hash: "1lvugfb", enc: "CgtaXEwDXExCR1QLCk5bSwddVw5AU1hEVltIVwtJXREFWghX" },
+    { label: "合言葉2", hash: "1xu68jx", enc: "CgtaXEwKWltMQlQXCkNdBQkfRQhfU0FMR10LXwdcHwsNWQBD" },
+    { label: "合言葉3", hash: "13rju37", enc: "CgtaXEwJXFtCR1AHCkNdBQkfRg5fXURIV10LXwdcHwgLWQ5G" },
+    { label: "合言葉4", hash: "19hxjby", enc: "CgtaXEwWQENPWlgMDURXCUtGXhRQXVtEW10GWUlHQRYGWwxd" },
+    { label: "合言葉5", hash: "1s099p6", enc: "CgtaXEwKWlJMWFQXCkNdBQkfRQhWU1tMR10LXwdcHwsNUABZ" },
+    { label: "合言葉6", hash: "t4eua",   enc: "CgtaXEwVUl1MV1QLCk5bSxFTRgBQU1hEVltIQQVYUwEFWghX" },
+    { label: "合言葉7", hash: "p59mpj",  enc: "CgtaXEwbRkNJVFYNCkNdBQkfVBRHVldOXV0LXwdcHxoRQQVV" },
+    { label: "合言葉8", hash: "1o6yevm", enc: "CgtaXEwKXEVFXE8KEUxaDwVdAAldQV5ET1sXVwpaUQxJXA5H" }
+  ];
 
-  (function() {
-    if (sessionStorage.getItem("nico_unlocked") === "true") {
-      document.getElementById("lockScreen").style.display = "none";
+  function decrypt(b64, key) {
+    var bin = decodeURIComponent(escape(atob(b64)));
+    var out = "";
+    for (var i = 0; i < bin.length; i++) {
+      out += String.fromCharCode(bin.charCodeAt(i) ^ key.charCodeAt(i % key.length));
     }
+    return out;
+  }
+  function simpleHash(str) {
+    var h = 5381;
+    for (var i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) >>> 0;
+    return h.toString(36);
+  }
+  var UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
+  // 入力された合言葉が、登録済みのどれかに一致すればbot IDを返す。なければnull。
+  function resolveId(pw) {
+    var h = simpleHash(pw);
+    for (var i = 0; i < KEYS.length; i++) {
+      if (KEYS[i].hash === h) {
+        var id = decrypt(KEYS[i].enc, pw);
+        if (UUID_RE.test(id)) return id;
+      }
+    }
+    return null;
+  }
+
+  // 入室済みなら復元してリンクを張り直す
+  (function() {
+    var saved = sessionStorage.getItem("nico_pw");
+    if (saved && resolveId(saved)) applyUnlock(saved);
   })();
+
+  function applyUnlock(pw) {
+    var id = resolveId(pw);
+    if (!id) return false;
+    var link = document.getElementById("botLink");
+    if (link) link.href = "https://claude.ai/public/artifacts/" + id;
+    var lock = document.getElementById("lockScreen");
+    if (lock) lock.style.display = "none";
+    return true;
+  }
 
   function checkPw() {
     var input = document.getElementById("pwInput").value.trim();
-    if (input === CORRECT_PW) {
-      sessionStorage.setItem("nico_unlocked", "true");
-      document.getElementById("lockScreen").style.display = "none";
+    if (applyUnlock(input)) {
+      sessionStorage.setItem("nico_pw", input);
     } else {
       document.getElementById("pwError").style.display = "block";
     }
