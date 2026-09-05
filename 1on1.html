@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="1on1に、本気を。モチベーションの源泉は対話にある。現場で聞いた55の困りごとから始める1on1実装パッケージ。困りごと解決ツール／アップデート講座／ラウンジミーティング。">
+  <meta property="og:title" content="1on1に、本気を。｜1on1実装パッケージ">
+  <meta property="og:description" content="モチベーションの源泉は、対話にある。本気でやれば、人は必ず動き出す。現場で磨いた55の乗り越える知恵から。">
+  <meta property="og:type" content="website">
+  <title>1on1に、本気を。｜1on1実装パッケージ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+:root{
+  --ground:#FAFBF7;
+  --surface:#FFFFFF;
+  --surface-soft:#EDF5EA;
+  --band:#DBEDC9;
+  --brand:#1D5B36;
+  --brand-deep:#103A22;
+  --on-brand:#F2F8F0;
+  --ink:#16201A;
+  --muted:#4E5D53;
+  --line:#D5DED4;
+  --accent:#B4622F;
+  --accent-deep:#8E4A20;
+  --on-accent:#FFF7F1;
+  --shadow:0 1px 2px rgba(16,58,34,.05), 0 12px 32px -18px rgba(16,58,34,.28);
+  --shadow-cta:0 10px 26px -12px rgba(180,98,47,.7);
+
+  --serif:"Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --sans:"Noto Sans JP", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  --util:"Zen Kaku Gothic New", "Hiragino Sans", system-ui, sans-serif;
+
+  /* ---- 文字サイズは この3つ（大・中・小）＋ヒーロー＋ラベル だけ ---- */
+  --fs-hero:clamp(1.75rem, 7vw, 4.75rem);
+  --fs-l:clamp(1.35rem, 3.6vw, 1.95rem);
+  --fs-m:clamp(1.05rem, 2.4vw, 1.25rem);
+  --fs-s:clamp(0.94rem, 1.1vw, 1rem);
+  --fs-xs:0.78rem;
+
+  --measure:min(100%, 42rem);
+  --wide:min(100%, 66rem);
+  --pad:clamp(1.25rem, 5vw, 3rem);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1512; --surface:#16201B; --surface-soft:#1A2620; --band:#1F3327;
+    --brand:#8ACFA4; --brand-deep:#B0DFC2; --on-brand:#0E1512;
+    --ink:#E8EFE8; --muted:#A3B3A8; --line:#2A3831;
+    --accent:#E5A171; --accent-deep:#F0B98F; --on-accent:#1A1109;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -18px rgba(0,0,0,.8);
+    --shadow-cta:0 10px 26px -12px rgba(229,161,113,.55);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1512; --surface:#16201B; --surface-soft:#1A2620; --band:#1F3327;
+  --brand:#8ACFA4; --brand-deep:#B0DFC2; --on-brand:#0E1512;
+  --ink:#E8EFE8; --muted:#A3B3A8; --line:#2A3831;
+  --accent:#E5A171; --accent-deep:#F0B98F; --on-accent:#1A1109;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -18px rgba(0,0,0,.8);
+  --shadow-cta:0 10px 26px -12px rgba(229,161,113,.55);
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:var(--sans);font-size:var(--fs-s);
+  line-height:2;letter-spacing:.02em;-webkit-font-smoothing:antialiased;
+}
+p{margin:0;}
+h1,h2,h3{margin:0;font-family:var(--serif);font-weight:600;text-wrap:balance;line-height:1.55;letter-spacing:.04em;color:var(--brand-deep);}
+h2{font-size:var(--fs-l);}
+h3{font-size:var(--fs-m);}
+small{font-size:var(--fs-xs);}
+
+.wrap{width:var(--wide);margin-inline:auto;padding-inline:var(--pad);}
+.col{width:var(--measure);margin-inline:auto;}
+.narrow{width:min(100%,50rem);margin-inline:auto;}
+.stack{display:flex;flex-direction:column;}
+.gap-s{gap:.9rem;} .gap-m{gap:1.75rem;} .gap-l{gap:2.75rem;}
+
+section{padding-block:clamp(3rem,7vw,4.75rem);}
+.count{padding-block:clamp(2.5rem,5vw,3.5rem);}
+
+.eyebrow{
+  font-family:var(--util);font-size:var(--fs-xs);font-weight:700;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--brand);
+}
+.lede{color:var(--muted);font-size:var(--fs-s);}
+.note{color:var(--muted);font-size:var(--fs-xs);line-height:1.9;letter-spacing:.04em;}
+.serif-lead{font-family:var(--serif);font-size:var(--fs-m);line-height:1.95;color:var(--brand-deep);}
+
+/* hero */
+.hero{
+  background:var(--band);
+  padding-block:clamp(4rem,10vw,7rem);
+  border-bottom:1px solid color-mix(in srgb, var(--brand) 22%, transparent);
+}
+.hero .brandline{font-family:var(--util);font-size:var(--fs-xs);letter-spacing:.18em;color:var(--brand-deep);opacity:.8;}
+.hero h1{font-size:var(--fs-hero);line-height:1.35;letter-spacing:.01em;white-space:nowrap;}
+.hero p{font-family:var(--serif);font-size:var(--fs-m);line-height:1.9;color:color-mix(in srgb, var(--brand-deep) 85%, var(--ink));max-width:34rem;}
+.tags{
+  font-family:var(--util);font-size:var(--fs-s);font-weight:700;letter-spacing:.06em;
+  color:color-mix(in srgb, var(--brand-deep) 72%, transparent);line-height:1.9;
+}
+
+/* voice */
+.voice-q{
+  font-family:var(--serif);font-size:var(--fs-l);font-weight:600;
+  line-height:1.75;letter-spacing:.04em;color:var(--brand-deep);
+}
+.punch{
+  font-family:var(--serif);font-size:var(--fs-l);font-weight:700;
+  line-height:1.7;letter-spacing:.04em;color:var(--brand-deep);
+  position:relative;padding-top:1.6rem;margin-top:.3rem;
+}
+.punch::before{
+  content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:2.75rem;height:2px;background:var(--accent);
+}
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));gap:1.25rem;}
+.who{
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;
+  padding:1.75rem 1.6rem;display:flex;flex-direction:column;gap:1rem;box-shadow:var(--shadow);
+}
+.who .tag{
+  align-self:flex-start;font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;
+  color:var(--on-brand);background:var(--brand);padding:.3rem .85rem;border-radius:99px;
+}
+.who ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.85rem;}
+.who li{
+  font-family:var(--serif);font-size:var(--fs-m);line-height:1.85;
+  color:var(--ink);padding-left:1rem;border-left:2px solid color-mix(in srgb, var(--brand) 45%, transparent);
+}
+.bridge{border-top:1px solid var(--line);padding-top:2.25rem;}
+
+/* 55 */
+.count{background:var(--brand);color:var(--on-brand);}
+.count .inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:1.5rem 3.5rem;}
+.bignum{font-family:var(--serif);font-weight:700;font-size:clamp(6rem,20vw,11rem);line-height:.85;letter-spacing:-.03em;font-variant-numeric:tabular-nums;}
+.count .said{display:flex;flex-direction:column;gap:.9rem;max-width:34rem;}
+.count .said p{font-family:var(--serif);font-size:var(--fs-m);line-height:1.9;}
+.count .said small{line-height:1.9;opacity:.8;}
+
+/* accordion */
+.accs{display:flex;flex-direction:column;gap:.75rem;}
+.acc{background:var(--surface);border:1px solid var(--line);border-radius:3px;overflow:hidden;box-shadow:var(--shadow);}
+.acc summary{
+  list-style:none;cursor:pointer;display:flex;align-items:center;gap:.9rem;
+  padding:1.05rem 1.25rem;font-family:var(--serif);font-size:var(--fs-m);
+  color:var(--brand-deep);letter-spacing:.06em;
+}
+.acc summary::-webkit-details-marker{display:none;}
+.acc summary:hover{background:var(--surface-soft);}
+.acc summary:focus-visible{outline:2px solid var(--brand);outline-offset:-2px;}
+.acc-name{flex:1;}
+.acc-count{
+  font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.1em;
+  color:var(--muted);background:var(--surface-soft);border:1px solid var(--line);
+  padding:.15rem .6rem;border-radius:99px;font-variant-numeric:tabular-nums;
+}
+.acc summary::after{
+  content:"";width:.62rem;height:.62rem;flex:none;margin-left:.2rem;
+  border-right:2px solid var(--brand);border-bottom:2px solid var(--brand);
+  transform:rotate(45deg) translate(-2px,-2px);transition:transform .25s ease;
+}
+.acc[open] summary::after{transform:rotate(-135deg) translate(-2px,-2px);}
+.acc-body{padding:.25rem clamp(1rem,3vw,1.5rem) 1.75rem;display:flex;flex-direction:column;gap:1.9rem;}
+.cat{display:flex;flex-direction:column;gap:.35rem;}
+.cat-head{
+  display:flex;align-items:baseline;gap:.6rem;font-size:var(--fs-m);
+  padding-bottom:.5rem;border-bottom:1px solid var(--brand);
+}
+.cat-mark{color:var(--brand);}
+.cat-name{flex:1;}
+.cat-count{font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.1em;color:var(--muted);}
+.acc-list{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(19rem,1fr));column-gap:2rem;}
+.acc-list li{display:flex;align-items:baseline;gap:.7rem;padding:.5rem 0;border-bottom:1px dotted var(--line);line-height:1.8;}
+.acc-list .no{font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.06em;color:var(--brand);flex:none;min-width:2.5em;}
+.acc-list .tt{flex:1;}
+.acc-list .free{
+  flex:none;font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.08em;
+  color:var(--on-accent);background:var(--accent);padding:.05rem .5rem;border-radius:99px;
+}
+
+/* faq */
+.faq .acc summary{font-family:var(--sans);font-weight:500;font-size:var(--fs-s);line-height:1.8;letter-spacing:.03em;}
+.faq .q{
+  flex:none;font-family:var(--serif);font-weight:700;font-size:var(--fs-m);color:var(--brand);
+  line-height:1;width:1.4em;
+}
+.faq .acc-body{padding:0 clamp(1rem,3vw,1.5rem) 1.4rem;gap:0;}
+.faq .acc-body p{color:var(--muted);line-height:1.95;border-top:1px dotted var(--line);padding-top:.9rem;}
+
+/* accordion nested inside the magazine card */
+.mag .accs{margin-top:.25rem;}
+.mag .acc{box-shadow:none;background:var(--surface-soft);}
+.mag .acc summary{padding:.9rem 1.1rem;}
+.mag .acc summary:hover{background:color-mix(in srgb, var(--brand) 8%, var(--surface-soft));}
+.mag .acc-count{background:var(--surface);}
+
+/* magazine */
+.mag{
+  background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--brand);
+  border-radius:3px;padding:clamp(1.5rem,4vw,2.25rem);
+  display:flex;flex-direction:column;gap:1rem;box-shadow:var(--shadow);
+}
+.mag .kicker{font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;color:var(--brand);}
+.mag h3{line-height:1.6;letter-spacing:.03em;display:flex;flex-direction:column;gap:.15rem;}
+.mag h3 .t-sub{font-size:var(--fs-m);font-weight:600;opacity:.85;}
+.mag h3 .t-main{font-size:var(--fs-l);font-weight:700;}
+.mag .price{display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem 1rem;}
+.mag .price .tagline{font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.12em;color:var(--on-brand);background:var(--brand);padding:.2rem .7rem;border-radius:2px;}
+.mag .price .yen{font-family:var(--serif);font-size:var(--fs-m);font-weight:700;color:var(--brand-deep);font-variant-numeric:tabular-nums;line-height:1;}
+.mag .price .unit{font-size:var(--fs-xs);color:var(--muted);}
+.mag p{color:var(--muted);line-height:1.95;}
+
+/* target */
+.targets{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem;}
+.target{
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;
+  padding:1.4rem 1.35rem;display:flex;gap:.85rem;align-items:flex-start;box-shadow:var(--shadow);
+}
+.target .chk{
+  flex:none;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--brand);
+  display:grid;place-items:center;margin-top:.35rem;
+}
+.target .chk::after{content:"";width:.42rem;height:.72rem;border-right:2px solid var(--on-brand);border-bottom:2px solid var(--on-brand);transform:rotate(45deg) translate(-1px,-1px);}
+.target p{font-family:var(--serif);font-size:var(--fs-m);line-height:1.8;color:var(--brand-deep);}
+
+/* metrics (プロフィール内) */
+.pstats{
+  background:var(--surface-soft);border:1px solid var(--line);border-radius:3px;
+  padding:1.2rem 1.4rem;display:flex;flex-wrap:wrap;gap:.6rem 2.5rem;align-items:baseline;
+}
+.stat{display:flex;align-items:baseline;gap:.55rem;font-variant-numeric:tabular-nums;}
+.stat .k{font-family:var(--util);font-size:var(--fs-xs);letter-spacing:.14em;color:var(--muted);}
+.stat .from{font-family:var(--serif);font-size:var(--fs-m);color:var(--muted);}
+.stat .arrow{color:var(--accent);font-size:var(--fs-xs);}
+.stat .to{font-family:var(--serif);font-size:var(--fs-l);line-height:1;font-weight:700;color:var(--brand-deep);}
+.pstats .cap{width:100%;font-size:var(--fs-xs);letter-spacing:.06em;color:var(--muted);line-height:1.8;}
+
+/* services */
+.services{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1.25rem;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:3px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);}
+.card header{
+  background:var(--brand);color:var(--on-brand);padding:1.1rem 1rem;text-align:center;
+  font-family:var(--serif);font-weight:700;font-size:var(--fs-m);line-height:1.6;letter-spacing:.06em;
+}
+.card header span{display:block;font-size:.78em;font-weight:400;letter-spacing:.16em;opacity:.85;}
+.card .body{padding:1.4rem 1.3rem;background:var(--surface-soft);flex:1;display:flex;flex-direction:column;gap:.9rem;}
+.card .body .line{font-family:var(--serif);font-size:var(--fs-m);line-height:1.8;color:var(--brand-deep);}
+.card .body p{color:var(--muted);line-height:1.95;}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem;}
+.step{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--brand);border-radius:3px;padding:1.5rem 1.35rem;display:flex;flex-direction:column;gap:.7rem;box-shadow:var(--shadow);}
+.step .n{font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;color:var(--brand);font-variant-numeric:tabular-nums;}
+.step h3{font-size:var(--fs-m);}
+.step p{color:var(--muted);line-height:1.95;}
+
+/* profile */
+.profile{
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;
+  padding:clamp(1.5rem,4vw,2.5rem);display:flex;flex-direction:column;gap:1.1rem;box-shadow:var(--shadow);
+}
+.profile .name{display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem 1rem;}
+.profile .name h3{font-size:var(--fs-l);}
+.profile .name .role{font-family:var(--util);font-size:var(--fs-xs);letter-spacing:.1em;color:var(--muted);}
+.profile p{color:var(--muted);line-height:2;}
+.social{display:flex;gap:.6rem;margin-left:auto;}
+.social a{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:2.5rem;height:2.5rem;border-radius:50%;flex:none;
+  background:var(--surface-soft);border:1px solid var(--line);
+  color:var(--brand);text-decoration:none;
+  transition:background .2s ease, color .2s ease, transform .2s ease, border-color .2s ease;
+}
+.social a:hover{background:var(--brand);border-color:var(--brand);color:var(--on-brand);transform:translateY(-2px);}
+.social a:focus-visible{outline:2px solid var(--brand);outline-offset:2px;}
+.social svg{width:1.05rem;height:1.05rem;fill:currentColor;display:block;}
+.social .note-mark{font-family:var(--util);font-weight:700;font-size:.64rem;letter-spacing:0;}
+@media (prefers-reduced-motion: reduce){ .social a{transition:none;} }
+
+.creds{display:flex;flex-wrap:wrap;gap:.5rem;}
+.creds span{
+  font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.08em;
+  color:var(--brand-deep);background:var(--surface-soft);border:1px solid var(--line);
+  padding:.3rem .8rem;border-radius:99px;
+}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.6rem;align-self:center;
+  font-family:var(--util);font-weight:700;letter-spacing:.1em;
+  border:0;border-radius:3px;text-decoration:none;
+  transition:background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.btn-primary{
+  background:var(--accent);color:var(--on-accent);
+  font-size:var(--fs-m);padding:1.3rem clamp(2rem,7vw,4rem);
+  box-shadow:var(--shadow-cta);
+}
+.btn-primary:hover{background:var(--accent-deep);transform:translateY(-2px);}
+.btn-line{background:var(--brand);color:var(--on-brand);font-size:var(--fs-s);padding:1rem 2.25rem;align-self:flex-start;}
+.btn-line:hover{background:var(--brand-deep);transform:translateY(-1px);}
+.btn:focus-visible{outline:2px solid var(--brand-deep);outline-offset:3px;}
+
+/* cta */
+.cta{background:var(--band);border-top:1px solid color-mix(in srgb, var(--brand) 22%, transparent);}
+.cta p{color:color-mix(in srgb, var(--brand-deep) 82%, var(--ink));}
+.cta .invite{font-family:var(--serif);font-size:var(--fs-m);line-height:1.9;}
+.cta .assure{font-size:var(--fs-xs);color:var(--muted);letter-spacing:.06em;}
+.cta-mid{padding-block:clamp(2.5rem,5.5vw,3.5rem);border-bottom:1px solid color-mix(in srgb, var(--brand) 22%, transparent);}
+
+footer{background:var(--surface);border-top:1px solid var(--line);padding-block:2.25rem;}
+footer .inner{display:flex;flex-wrap:wrap;gap:.5rem 2rem;justify-content:space-between;align-items:baseline;color:var(--muted);font-family:var(--util);font-size:var(--fs-xs);letter-spacing:.1em;}
+
+/* contact form */
+.cform{
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;
+  padding:clamp(1.5rem,4vw,2.5rem);width:100%;text-align:left;
+  display:flex;flex-direction:column;gap:1.35rem;box-shadow:var(--shadow);
+}
+.field{display:flex;flex-direction:column;gap:.45rem;}
+.field > label{
+  font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.1em;
+  color:var(--brand-deep);display:flex;align-items:center;gap:.5rem;
+}
+.field .req,.field .opt{
+  font-size:.92em;font-weight:700;letter-spacing:.06em;
+  padding:.08rem .5rem;border-radius:2px;line-height:1.7;
+}
+.field .req{color:var(--on-accent);background:var(--accent);}
+.field .opt{color:var(--muted);background:var(--surface-soft);border:1px solid var(--line);}
+.field input,.field textarea{
+  font-family:var(--sans);font-size:var(--fs-s);line-height:1.8;color:var(--ink);
+  background:var(--ground);border:1px solid var(--line);border-radius:3px;
+  padding:.8rem .9rem;width:100%;
+  transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.field input::placeholder,.field textarea::placeholder{color:color-mix(in srgb, var(--muted) 55%, transparent);}
+.field input:focus,.field textarea:focus{
+  outline:none;background:var(--surface);border-color:var(--brand);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--brand) 18%, transparent);
+}
+.field textarea{resize:vertical;min-height:7.5rem;}
+.field .hint{font-size:var(--fs-xs);color:var(--muted);line-height:1.75;letter-spacing:.03em;}
+.cform .btn-primary{align-self:center;margin-top:.4rem;}
+.cform .btn-primary[disabled]{opacity:.55;pointer-events:none;}
+.cform .privacy{font-size:var(--fs-xs);color:var(--muted);text-align:center;line-height:1.8;}
+.fstate{display:none;padding:1.1rem 1.2rem;border-radius:3px;font-size:var(--fs-s);line-height:1.95;}
+.fstate.is-ok{display:block;background:var(--surface-soft);border:1px solid var(--brand);color:var(--brand-deep);}
+.fstate.is-ng{display:block;background:color-mix(in srgb, var(--accent) 12%, var(--surface));border:1px solid var(--accent);color:var(--accent-deep);}
+.fstate a{color:inherit;}
+@media (prefers-reduced-motion: reduce){ .field input,.field textarea{transition:none;} }
+
+/* sticky bar (mobile) */
+.sticky{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;display:none;
+  padding:.7rem var(--pad) calc(.7rem + env(safe-area-inset-bottom,0px));
+  background:color-mix(in srgb, var(--band) 92%, transparent);
+  border-top:1px solid color-mix(in srgb, var(--brand) 25%, transparent);
+  backdrop-filter:blur(8px);
+}
+.sticky .btn{width:100%;padding:.95rem 1rem;font-size:var(--fs-s);}
+@media (max-width:48rem){
+  .sticky{display:block;}
+  body{padding-bottom:4.5rem;}
+}
+
+.rv{opacity:0;transform:translateY(14px);transition:opacity .8s ease, transform .8s cubic-bezier(.22,.8,.28,1);}
+.rv.is-on{opacity:1;transform:none;}
+@media (prefers-reduced-motion: reduce){
+  .rv{opacity:1;transform:none;transition:none;}
+  .btn,.acc summary::after{transition:none;}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap stack gap-m" style="align-items:center;text-align:center">
+    <p class="brandline">Happy Happy Nico ｜ 1on1実装パッケージ</p>
+    <h1>1on1に、本気を。</h1>
+    <p>モチベーションの源泉は、対話にある。<br>本気でやれば、人は必ず動き出す。</p>
+    <p class="tags">#現場　#実践知　#研修では教えてくれない</p>
+  </div>
+</header>
+
+<section class="voice">
+  <div class="wrap stack gap-m">
+    <div class="stack gap-s rv" style="align-items:center;width:100%;text-align:center">
+      <p class="eyebrow">Voice</p>
+      <p class="voice-q">カレンダーに並ぶ30分。<br>その時間、活きていますか？</p>
+    </div>
+
+    <div class="duo rv">
+      <div class="who">
+        <span class="tag">上司のこえ</span>
+        <ul>
+          <li>忙しくて時間が取れない</li>
+          <li>つい、喋りすぎてしまう</li>
+          <li>結局、進捗確認になってしまった</li>
+        </ul>
+      </div>
+      <div class="who">
+        <span class="tag">部下のこえ</span>
+        <ul>
+          <li>何を話そうか、決まらない</li>
+          <li>正直、本音は言いにくい</li>
+          <li>気づけば、いつもうなずいて終わっていた</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col bridge stack gap-s rv" style="width:100%;align-items:center;text-align:center">
+      <p class="serif-lead">1on1を続けていれば、必ず困りごとにぶつかる。<br>「どうすればいい？」「どう向き合えばいい？」<br>研修では教えてくれない、現場のリアルな悩みがある。</p>
+      <p class="punch">ぶつかるのは、本気でやっている証拠だ。</p>
+    </div>
+  </div>
+</section>
+
+<section class="count">
+  <div class="wrap inner">
+    <span class="bignum">55</span>
+    <div class="said">
+      <p>人事でもない。講師でもない。<br>モノづくりの現場リーダーが、<br>現場と一緒に乗り越えてきた足跡です。</p>
+      <small>人事が考えた仕組みも、講師から学んだ教えも、そのままでは現場に根づきませんでした。必要だったのは、一つひとつの困りごとに向き合う、涙ぐましいほど地道な努力。その積み重ねが、55の知恵になりました。</small>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap narrow stack gap-m">
+    <div class="mag rv">
+      <p class="kicker">note 有料マガジン</p>
+      <h3><span class="t-sub">1on1の困りごと55選</span><span class="t-main">現場と磨いた乗り越える知恵</span></h3>
+      <div class="price">
+        <span class="tagline">特別価格</span>
+        <span class="yen">¥980</span>
+        <span class="unit">／ 55本すべて読み放題</span>
+      </div>
+
+      <div class="accs">
+        <details class="acc">
+          <summary><span class="acc-name">困りごと一覧</span><span class="acc-count">全55</span></summary>
+          <div class="acc-body">
+            <div class="cat">
+              <h3 class="cat-head"><span class="cat-mark">①</span><span class="cat-name">導入・準備</span><span class="cat-count">15</span></h3>
+              <ul class="acc-list">
+                <li><span class="no">０１</span><span class="tt">何のためにやるの？</span><span class="free">無料</span></li>
+                <li><span class="no">０２</span><span class="tt">いつも話しているので不要です</span></li>
+                <li><span class="no">０３</span><span class="tt">評価面談と何が違うんですか？</span></li>
+                <li><span class="no">０４</span><span class="tt">他の人とやり方が違うらしくて</span></li>
+                <li><span class="no">０５</span><span class="tt">やることが目的になってないですか？</span></li>
+                <li><span class="no">０６</span><span class="tt">1on1やりたくないと言われました</span></li>
+                <li><span class="no">０７</span><span class="tt">話すネタを探すだけで時間が過ぎます</span></li>
+                <li><span class="no">０８</span><span class="tt">メモ、取っても大丈夫？</span></li>
+                <li><span class="no">０９</span><span class="tt">適切な実施頻度ってどう決めるの？</span></li>
+                <li><span class="no">１０</span><span class="tt">リモートと対面、どちらがいいのでしょう</span></li>
+                <li><span class="no">１１</span><span class="tt">対話の時間が延びがちです</span></li>
+                <li><span class="no">１２</span><span class="tt">時間の確保が大変です</span></li>
+                <li><span class="no">１３</span><span class="tt">相手が準備をしてこないんです</span></li>
+                <li><span class="no">１４</span><span class="tt">準備ってどうすればいいですか？</span></li>
+                <li><span class="no">１５</span><span class="tt">忙しくて1on1に集中できません</span></li>
+              </ul>
+            </div>
+            <div class="cat">
+              <h3 class="cat-head"><span class="cat-mark">②</span><span class="cat-name">対話スキル</span><span class="cat-count">16</span></h3>
+              <ul class="acc-list">
+                <li><span class="no">１６</span><span class="tt">つい喋りすぎちゃって</span><span class="free">無料</span></li>
+                <li><span class="no">１７</span><span class="tt">会話が続かなくて</span></li>
+                <li><span class="no">１８</span><span class="tt">一方通行になってしまいます</span></li>
+                <li><span class="no">１９</span><span class="tt">雑談になってしまいます</span></li>
+                <li><span class="no">２０</span><span class="tt">相手の話が長くて</span></li>
+                <li><span class="no">２１</span><span class="tt">沈黙に耐えられません</span></li>
+                <li><span class="no">２２</span><span class="tt">傾聴がうまくできません</span></li>
+                <li><span class="no">２３</span><span class="tt">ついアドバイスしちゃいます</span></li>
+                <li><span class="no">２４</span><span class="tt">うまく考えを引き出せなくて</span></li>
+                <li><span class="no">２５</span><span class="tt">問題提起ばかりで</span></li>
+                <li><span class="no">２６</span><span class="tt">不満ばかり言われます</span></li>
+                <li><span class="no">２７</span><span class="tt">相手が、やり過ごそうとします</span></li>
+                <li><span class="no">２８</span><span class="tt">自分も答えを持ってなくて</span></li>
+                <li><span class="no">２９</span><span class="tt">フィードバックって苦手で</span></li>
+                <li><span class="no">３０</span><span class="tt">ネガティブなことを伝えるのが苦手です</span></li>
+                <li><span class="no">３１</span><span class="tt">なんでも褒めるのって、甘やかしじゃないの？</span></li>
+              </ul>
+            </div>
+            <div class="cat">
+              <h3 class="cat-head"><span class="cat-mark">③</span><span class="cat-name">テーマ・内容</span><span class="cat-count">9</span></h3>
+              <ul class="acc-list">
+                <li><span class="no">３２</span><span class="tt">対話のテーマがころころ変わって</span></li>
+                <li><span class="no">３３</span><span class="tt">どこまで話すべきか</span></li>
+                <li><span class="no">３４</span><span class="tt">それ話したくない、と言われて</span></li>
+                <li><span class="no">３５</span><span class="tt">キャリアの話をしなければならないの？</span></li>
+                <li><span class="no">３６</span><span class="tt">業務の話になっちゃいます</span><span class="free">無料</span></li>
+                <li><span class="no">３７</span><span class="tt">どこまで聞いていいか、迷います</span></li>
+                <li><span class="no">３８</span><span class="tt">ポジティブな話ばっかりで</span></li>
+                <li><span class="no">３９</span><span class="tt">キャリアの話したら、辞めちゃう気が</span></li>
+                <li><span class="no">４０</span><span class="tt">今のままでいい、って言われちゃって</span></li>
+              </ul>
+            </div>
+            <div class="cat">
+              <h3 class="cat-head"><span class="cat-mark">④</span><span class="cat-name">関係性・信頼</span><span class="cat-count">9</span></h3>
+              <ul class="acc-list">
+                <li><span class="no">４１</span><span class="tt">相手との相性が合わないです</span></li>
+                <li><span class="no">４２</span><span class="tt">相手を怒らせてしまいました</span></li>
+                <li><span class="no">４３</span><span class="tt">年上の方とやりにくいです</span></li>
+                <li><span class="no">４４</span><span class="tt">本音を言うと評価に影響がでそうだと心配されます</span></li>
+                <li><span class="no">４５</span><span class="tt">他の人と言ってることが違わないか気になって</span></li>
+                <li><span class="no">４６</span><span class="tt">信頼関係が築けている気がしません</span></li>
+                <li><span class="no">４７</span><span class="tt">表面的な話ばかりで</span></li>
+                <li><span class="no">４８</span><span class="tt">なんか様子がおかしい気がするんです</span></li>
+                <li><span class="no">４９</span><span class="tt">メンタルの話をされても、どうすればいいのか</span></li>
+              </ul>
+            </div>
+            <div class="cat">
+              <h3 class="cat-head"><span class="cat-mark">⑤</span><span class="cat-name">成果・効果</span><span class="cat-count">6</span></h3>
+              <ul class="acc-list">
+                <li><span class="no">５０</span><span class="tt">寄り添っているだけで、何も解決していない気が</span></li>
+                <li><span class="no">５１</span><span class="tt">効果をどのように測ればよいか分かりません</span></li>
+                <li><span class="no">５２</span><span class="tt">気づきが生まれているのか心配です</span></li>
+                <li><span class="no">５３</span><span class="tt">成果はいつ出るんでしょう？</span></li>
+                <li><span class="no">５４</span><span class="tt">もっと早く行動してほしいのに</span></li>
+                <li><span class="no">５５</span><span class="tt">思っていたのとは違う方向に進んでいっちゃいます</span></li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+      <a class="btn btn-line" href="https://note.com/happyhappynico/m/m9b66161f2bdc" target="_blank" rel="noopener">noteでマガジンを見る<span class="arw">→</span></a>　※10月公開予定
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--surface-soft);border-block:1px solid var(--line)">
+  <div class="wrap narrow stack gap-m">
+    <div class="stack gap-s rv">
+      <p class="eyebrow">Profile</p>
+      <h2>お話しするのは、この人です。</h2>
+    </div>
+    <div class="profile rv">
+      <div class="name">
+        <h3>末岡 良章</h3>
+        <span class="role">Happy Happy Nico 代表 ／ エンジニア × 組織風土改革の二刀流</span>
+        <div class="social">
+          <a href="https://note.com/happyhappynico" target="_blank" rel="noopener" title="noteを見る" aria-label="noteを見る（別タブで開きます）"><span class="note-mark">note</span></a>
+          <a href="https://www.linkedin.com/in/%E8%89%AF%E7%AB%A0-%E6%9C%AB%E5%B2%A1-870360354" target="_blank" rel="noopener" title="LinkedInを見る" aria-label="LinkedInを見る（別タブで開きます）"><svg viewBox="0 0 448 512" role="img" aria-hidden="true" focusable="false"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg></a>
+        </div>
+      </div>
+      <p>半導体製造装置、デジタルカメラ、医療機器など、エンジニアとして現場を歩いてきました。2020年、約4000人が在籍する組織の風土改革リーダーを任され、1on1の浸透を推進。研修だけでは届かなかった現場に足を運び、1000回を超える対話を重ねてきました。その積み重ねが、この数字になっています。</p>
+
+      <div class="pstats">
+        <span class="stat"><span class="k">実施率</span><span class="from">20%</span><span class="arrow">→</span><span class="to">80%</span></span>
+        <span class="stat"><span class="k">満足度</span><span class="from">30%</span><span class="arrow">→</span><span class="to">70%</span></span>
+      </div>
+
+      <p>机上の理論だけではなく、現場で確かめた言葉をお届けしています。</p>
+      <div class="creds">
+        <span>国際コーチング連盟アソシエイト認定コーチ（ACC）</span><br>
+        <span>プロティアン・キャリア協会認定 ファシリテーター</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap stack gap-m">
+    <div class="col stack gap-s rv" style="width:100%">
+      <p class="eyebrow">For</p>
+      <h2>こんな組織に、届けています。</h2>
+    </div>
+    <div class="targets rv">
+      <div class="target"><span class="chk"></span><p>1on1をもっとキャリア構築に活かしたい</p></div>
+      <div class="target"><span class="chk"></span><p>1on1を現場に定着させたノウハウを知りたい</p></div>
+      <div class="target"><span class="chk"></span><p>1on1で組織の心理的安全性を高めたい</p></div>
+      <div class="target"><span class="chk"></span><p>1on1の現場での活用の事例を知りたい</p></div>
+      <div class="target"><span class="chk"></span><p>1on1の実際の効果を知りたい</p></div>
+      <div class="target"><span class="chk"></span><p>1on1を形骸化させたくない</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--surface-soft);border-block:1px solid var(--line)">
+  <div class="wrap stack gap-m">
+    <div class="col stack gap-s rv" style="width:100%">
+      <p class="eyebrow">Services</p>
+      <h2>1on1実装パッケージ｜3つのサービス</h2>
+      <p class="serif-lead">1on1は、一度学んで終わりではありません。<br>必要なのは、困ったときに戻れる場所があること。<br>その場所を提供します。</p>
+    </div>
+    <div class="services rv">
+      <article class="card">
+        <header><span>1on1</span>困りごと解決ツール</header>
+        <div class="body">
+          <p class="line">困った時に、答えがある</p>
+          <p>文書による「困りごと55選」やAIによる解決ツールなどのツールを提供します。</p>
+        </div>
+      </article>
+      <article class="card">
+        <header><span>1on1</span>アップデート講座</header>
+        <div class="body">
+          <p class="line">明日の30分が、変わる。</p>
+          <p>職場における対話スキルをアップデートするための実践的な講座です。</p>
+        </div>
+      </article>
+      <article class="card">
+        <header><span>1on1</span>ラウンジミーティング</header>
+        <div class="body">
+          <p class="line">実践知を、積み重ねる。</p>
+          <p>実践の気づきや困りごとをシェアし、解決策や次の一手を導く少人数制の定例ワークショップです。</p>
+        </div>
+      </article>
+    </div>
+    <p class="note rv">3つのうち、ひとつからでも始められます。組織の状況にあわせて組み合わせをご提案します。</p>
+  </div>
+</section>
+
+<section class="cta cta-mid">
+  <div class="wrap col stack gap-s rv" style="align-items:center;text-align:center">
+    <p class="invite">まずは、話を聞いてみたい方へ。</p>
+    <a class="btn btn-primary" href="#contact">無料相談はこちら<span class="arw">→</span></a>
+  </div>
+</section>
+
+<section>
+  <div class="wrap stack gap-m">
+    <div class="col stack gap-s rv" style="width:100%">
+      <p class="eyebrow">Flow</p>
+      <h2>ご相談から、実装まで。</h2>
+    </div>
+    <div class="flow rv">
+      <div class="step">
+        <span class="n">STEP 01</span>
+        <h3>無料相談</h3>
+        <p>オンラインでお話をうかがいます。資料の準備は不要です。いま起きていることを、そのままお聞かせください。</p>
+      </div>
+      <div class="step">
+        <span class="n">STEP 02</span>
+        <h3>ご提案</h3>
+        <p>組織の規模や状況にあわせて、どこから始めるとよいかをご提案します。ひとつのサービスだけでも構いません。</p>
+      </div>
+      <div class="step">
+        <span class="n">STEP 03</span>
+        <h3>実装と伴走</h3>
+        <p>ツール・講座・ミーティングを組み合わせ、1on1のきっかけを現場に届け続けます。形骸化させないところまでご一緒します。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq" style="background:var(--surface-soft);border-block:1px solid var(--line)">
+  <div class="wrap narrow stack gap-m">
+    <div class="stack gap-s rv">
+      <p class="eyebrow">FAQ</p>
+      <h2>よくあるご質問</h2>
+    </div>
+    <div class="accs rv">
+      <details class="acc">
+        <summary><span class="q">Q</span><span class="acc-name">1on1をまだ始めていないのですが、相談できますか？</span></summary>
+        <div class="acc-body"><p>もちろんです。これから始める組織にも、すでに続けている組織にも、状況にあわせて設計します。まずは現状をお聞かせください。</p></div>
+      </details>
+      <details class="acc">
+        <summary><span class="q">Q</span><span class="acc-name">3つのサービスのうち、ひとつだけの利用もできますか？</span></summary>
+        <div class="acc-body"><p>はい、ひとつからご利用いただけます。どこから始めるとよいかは、無料相談の中で一緒に考えます。</p></div>
+      </details>
+      <details class="acc">
+        <summary><span class="q">Q</span><span class="acc-name">対象となる人数や規模の目安はありますか？</span></summary>
+        <div class="acc-body"><p>少人数のチームから数千人規模の組織まで対応しています。規模に応じて進め方を変えてご提案します。</p></div>
+      </details>
+      <details class="acc">
+        <summary><span class="q">Q</span><span class="acc-name">オンラインでも実施できますか？</span></summary>
+        <div class="acc-body"><p>はい。講座もラウンジミーティングも、オンラインで実施できます。対面をご希望の場合もご相談ください。</p></div>
+      </details>
+      <details class="acc">
+        <summary><span class="q">Q</span><span class="acc-name">費用はどのくらいかかりますか？</span></summary>
+        <div class="acc-body"><p>内容と規模によって変わります。ご要望をうかがったうえでお見積りをお出しします。無料相談の中で、おおよその目安もお伝えできます。</p></div>
+      </details>
+      <details class="acc">
+        <summary><span class="q">Q</span><span class="acc-name">無料相談では、何を話せばよいですか？</span></summary>
+        <div class="acc-body"><p>決まった準備は必要ありません。うまくいっていることも、迷っていることも、そのままお聞かせください。</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="wrap narrow stack gap-m">
+    <div class="stack gap-s rv" style="align-items:center;text-align:center">
+      <p class="eyebrow" style="color:var(--brand-deep)">Contact</p>
+      <h2>無料相談のお申し込み</h2>
+      <p class="invite" style="max-width:31rem">みなさんの現場で起きていること、困っていることを、聞かせてください。</p>
+    </div>
+
+    <div class="fstate" id="form-state" role="status" aria-live="polite"></div>
+
+    <form class="cform rv" id="contact-form" action="https://formspree.io/f/xyeyprzo" method="POST">
+      <input type="hidden" name="_subject" value="【1on1実装パッケージ】無料相談のお申し込み">
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+
+      <div class="field">
+        <label for="f-name">お名前 <span class="req">必須</span></label>
+        <input id="f-name" name="お名前" type="text" required autocomplete="name" placeholder="末岡 良章">
+      </div>
+
+      <div class="field">
+        <label for="f-company">会社名・団体名 <span class="opt">任意</span></label>
+        <input id="f-company" name="会社名" type="text" autocomplete="organization" placeholder="株式会社ハッピーハッピーニコ">
+      </div>
+
+      <div class="field">
+        <label for="f-email">メールアドレス <span class="req">必須</span></label>
+        <input id="f-email" name="メールアドレス" type="email" required autocomplete="email" placeholder="example@company.co.jp">
+        <p class="hint">こちらのアドレスにご返信します。お間違いのないようご確認ください。</p>
+      </div>
+
+      <div class="field">
+        <label for="f-message">ご相談内容 <span class="req">必須</span></label>
+        <textarea id="f-message" name="ご相談内容" required placeholder="いま1on1で起きていること、お困りのこと、聞いてみたいことなど。箇条書きでも構いません。"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="f-schedule">打ち合わせ希望日時 <span class="opt">任意</span></label>
+        <textarea id="f-schedule" name="打ち合わせ希望日時" style="min-height:5rem" placeholder="例）9月10日（木）14:00〜16:00 / 9月12日（土）午前中"></textarea>
+        <p class="hint">候補をいくつかいただけると調整がスムーズです。未記入でも構いません。こちらから候補をお送りします。</p>
+      </div>
+
+      <button class="btn btn-primary" type="submit" id="form-submit">送信する<span class="arw">→</span></button>
+      <p class="privacy">いただいた情報は、ご相談の対応のみに使用します。<br>営業目的での連絡や第三者への提供はいたしません。</p>
+    </form>
+
+    <p class="assure" style="text-align:center">オンラインでお話をうかがいます。ご相談だけでも構いません。</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap inner">
+    <span>Happy Happy Nico ｜ 末岡良章</span>
+    <span>組織風土改革 ／ 1on1浸透支援 ／ コーチング</span>
+  </div>
+</footer>
+
+<div class="sticky">
+  <a class="btn btn-primary" href="#contact">無料相談はこちら</a>
+</div>
+
+<script>
+(function(){
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      e.target.classList.add('is-on');
+      io.unobserve(e.target);
+    });
+  }, {threshold:.12, rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+})();
+
+// 問い合わせフォーム：ページを離れずに送信する（JSが動かない場合は通常送信にフォールバック）
+(function(){
+  var form = document.getElementById('contact-form');
+  var state = document.getElementById('form-state');
+  var btn = document.getElementById('form-submit');
+  if(!form || !state || !btn || !window.fetch) return;
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    state.className = 'fstate';
+    state.textContent = '';
+    btn.disabled = true;
+    btn.textContent = '送信中…';
+
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(function(res){
+      if(res.ok){
+        form.style.display = 'none';
+        state.className = 'fstate is-ok';
+        state.textContent = 'お申し込みありがとうございます。内容を確認のうえ、いただいたメールアドレスへご返信します。しばらくお待ちください。';
+        state.scrollIntoView({behavior:'smooth', block:'center'});
+      } else {
+        return res.json().then(function(d){
+          throw new Error(d && d.errors ? d.errors.map(function(x){return x.message;}).join(' / ') : '');
+        });
+      }
+    }).catch(function(err){
+      state.className = 'fstate is-ng';
+      state.innerHTML = '送信できませんでした。お手数ですが、時間をおいて再度お試しください。'
+        + '<br>くり返し送信できない場合は、note または LinkedIn からご連絡ください。'
+        + (err && err.message ? '<br><small>（' + err.message + '）</small>' : '');
+      btn.disabled = false;
+      btn.innerHTML = '送信する<span class="arw">→</span>';
+    });
+  });
+})();
+</script>
+</body>
+</html>
