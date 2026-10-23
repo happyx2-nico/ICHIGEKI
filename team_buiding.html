@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="極上の対話で、チームが動く。機能するチームは、自然には生まれない。お互いを知る・目標を知る・約束事を知る・チーム状態を知る。4つのコミュニケーションから始めるチームビルディング実装パッケージ。">
+  <meta property="og:title" content="極上の対話で、チームが動く。｜チームビルディング実装パッケージ">
+  <meta property="og:description" content="機能するチームは、自然には生まれない。意図的に、戦略的に。4つのコミュニケーションから、チームは動き出す。">
+  <meta property="og:type" content="website">
+  <title>極上の対話で、チームが動く。｜チームビルディング実装パッケージ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+:root{
+  --ground:#FAFBF7;
+  --surface:#FFFFFF;
+  --surface-soft:#EDF5EA;
+  --band:#DBEDC9;
+  --brand:#1D5B36;
+  --brand-deep:#103A22;
+  --on-brand:#F2F8F0;
+  --ink:#16201A;
+  --muted:#4E5D53;
+  --line:#D5DED4;
+  --accent:#B4622F;
+  --accent-deep:#8E4A20;
+  --on-accent:#FFF7F1;
+  --shadow:0 1px 2px rgba(16,58,34,.05), 0 12px 32px -18px rgba(16,58,34,.28);
+  --shadow-cta:0 10px 26px -12px rgba(180,98,47,.7);
+
+  --serif:"Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --sans:"Noto Sans JP", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  --util:"Zen Kaku Gothic New", "Hiragino Sans", system-ui, sans-serif;
+
+  --fs-hero:clamp(1.75rem, 7vw, 4.75rem);
+  --fs-l:clamp(1.35rem, 3.6vw, 1.95rem);
+  --fs-m:clamp(1.05rem, 2.4vw, 1.25rem);
+  --fs-s:clamp(0.94rem, 1.1vw, 1rem);
+  --fs-xs:0.78rem;
+
+  --measure:min(100%, 42rem);
+  --wide:min(100%, 66rem);
+  --pad:clamp(1.25rem, 5vw, 3rem);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1512; --surface:#16201B; --surface-soft:#1A2620; --band:#1F3327;
+    --brand:#8ACFA4; --brand-deep:#B0DFC2; --on-brand:#0E1512;
+    --ink:#E8EFE8; --muted:#A3B3A8; --line:#2A3831;
+    --accent:#E5A171; --accent-deep:#F0B98F; --on-accent:#1A1109;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -18px rgba(0,0,0,.8);
+    --shadow-cta:0 10px 26px -12px rgba(229,161,113,.55);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1512; --surface:#16201B; --surface-soft:#1A2620; --band:#1F3327;
+  --brand:#8ACFA4; --brand-deep:#B0DFC2; --on-brand:#0E1512;
+  --ink:#E8EFE8; --muted:#A3B3A8; --line:#2A3831;
+  --accent:#E5A171; --accent-deep:#F0B98F; --on-accent:#1A1109;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -18px rgba(0,0,0,.8);
+  --shadow-cta:0 10px 26px -12px rgba(229,161,113,.55);
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:var(--sans);font-size:var(--fs-s);
+  line-height:2;letter-spacing:.02em;-webkit-font-smoothing:antialiased;
+}
+p{margin:0;}
+h1,h2,h3{margin:0;font-family:var(--serif);font-weight:600;text-wrap:balance;line-height:1.55;letter-spacing:.04em;color:var(--brand-deep);}
+h2{font-size:var(--fs-l);}
+h3{font-size:var(--fs-m);}
+small{font-size:var(--fs-xs);}
+
+.wrap{width:var(--wide);margin-inline:auto;padding-inline:var(--pad);}
+.col{width:var(--measure);margin-inline:auto;}
+.narrow{width:min(100%,50rem);margin-inline:auto;}
+.stack{display:flex;flex-direction:column;}
+.gap-s{gap:.9rem;} .gap-m{gap:1.75rem;} .gap-l{gap:2.75rem;}
+
+section{padding-block:clamp(3rem,7vw,4.75rem);}
+.count{padding-block:clamp(2.5rem,5vw,3.5rem);}
+
+.eyebrow{
+  font-family:var(--util);font-size:var(--fs-xs);font-weight:700;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--brand);
+}
+.lede{color:var(--muted);font-size:var(--fs-s);}
+.note{color:var(--muted);font-size:var(--fs-xs);line-height:1.9;letter-spacing:.04em;}
+.serif-lead{font-family:var(--serif);font-size:var(--fs-m);line-height:1.95;color:var(--brand-deep);}
+
+/* hero */
+.hero{
+  background:var(--band);
+  padding-block:clamp(4rem,10vw,7rem);
+  padding-top:calc(clamp(4rem,10vw,7rem) + env(safe-area-inset-top,0px));
+  border-bottom:1px solid color-mix(in srgb, var(--brand) 22%, transparent);
+}
+.hero .brandline{font-family:var(--util);font-size:var(--fs-xs);letter-spacing:.18em;color:var(--brand-deep);opacity:.8;}
+.hero h1{font-size:var(--fs-hero);line-height:1.35;letter-spacing:.01em;}
+.hero p{font-family:var(--serif);font-size:var(--fs-m);line-height:1.9;color:color-mix(in srgb, var(--brand-deep) 85%, var(--ink));max-width:36rem;}
+.tags{
+  font-family:var(--util);font-size:var(--fs-s);font-weight:700;letter-spacing:.06em;
+  color:color-mix(in srgb, var(--brand-deep) 72%, transparent);line-height:1.9;
+}
+
+/* voice */
+.voice-q{
+  font-family:var(--serif);font-size:var(--fs-l);font-weight:600;
+  line-height:1.75;letter-spacing:.04em;color:var(--brand-deep);
+}
+.punch{
+  font-family:var(--serif);font-size:var(--fs-l);font-weight:700;
+  line-height:1.7;letter-spacing:.04em;color:var(--brand-deep);
+  position:relative;padding-top:1.6rem;margin-top:.3rem;
+}
+.punch::before{
+  content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:2.75rem;height:2px;background:var(--accent);
+}
+
+/* compare (機能している/していない) */
+.compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:1.25rem;}
+.cpanel{
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;
+  padding:1.75rem 1.6rem;display:flex;flex-direction:column;gap:1rem;box-shadow:var(--shadow);
+}
+.cpanel.bad{border-top:3px solid color-mix(in srgb, var(--muted) 45%, transparent);}
+.cpanel.good{border-top:3px solid var(--brand);}
+.cpanel .tag{
+  align-self:flex-start;font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.14em;
+  padding:.3rem .85rem;border-radius:99px;
+}
+.cpanel.bad .tag{color:var(--muted);background:var(--surface-soft);border:1px solid var(--line);}
+.cpanel.good .tag{color:var(--on-brand);background:var(--brand);}
+.cpanel ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.9rem;}
+.cpanel li{
+  font-family:var(--serif);font-size:var(--fs-m);line-height:1.8;
+  padding-left:1.4rem;position:relative;
+}
+.cpanel.bad li{color:var(--ink);}
+.cpanel.good li{color:var(--brand-deep);}
+.cpanel.bad li::before{
+  content:"";position:absolute;left:0;top:.72em;width:.7rem;height:2px;
+  background:color-mix(in srgb, var(--muted) 55%, transparent);
+}
+.cpanel.good li::before{
+  content:"";position:absolute;left:.1rem;top:.5em;width:.4rem;height:.72rem;
+  border-right:2px solid var(--brand);border-bottom:2px solid var(--brand);
+  transform:rotate(45deg);
+}
+
+/* 4 (count section) */
+.count{background:var(--brand);color:var(--on-brand);}
+.count .inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:1.5rem 3.5rem;}
+.bignum{font-family:var(--serif);font-weight:700;font-size:clamp(6rem,20vw,11rem);line-height:.85;letter-spacing:-.03em;font-variant-numeric:tabular-nums;}
+.count .said{display:flex;flex-direction:column;gap:1.1rem;max-width:34rem;}
+.count .said p{font-family:var(--serif);font-size:var(--fs-m);line-height:1.9;}
+.count .said small{line-height:1.9;opacity:.85;}
+.count .four{display:flex;flex-wrap:wrap;gap:.5rem;}
+.count .four span{
+  font-family:var(--util);font-size:var(--fs-s);font-weight:700;letter-spacing:.06em;
+  color:var(--on-brand);border:1.5px solid color-mix(in srgb, var(--on-brand) 55%, transparent);
+  padding:.35rem .9rem;border-radius:99px;line-height:1.4;
+}
+
+/* 4 communications cards */
+.comms{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:1.1rem;}
+.comm{
+  background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--brand);
+  border-radius:3px;padding:1.6rem 1.4rem;display:flex;flex-direction:column;gap:.7rem;box-shadow:var(--shadow);
+}
+.comm{align-items:flex-start;}
+.comm .toprow{display:flex;align-items:center;gap:.7rem;width:100%;}
+.comm .n{
+  font-family:var(--serif);font-weight:700;font-size:1.6rem;line-height:1;
+  color:var(--on-brand);background:var(--brand);
+  width:2.4rem;height:2.4rem;border-radius:50%;flex:none;
+  display:grid;place-items:center;font-variant-numeric:tabular-nums;
+}
+.comm .layer{font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.12em;color:var(--on-accent);background:var(--accent);padding:.2rem .7rem;border-radius:99px;}
+.comm h3{
+  font-size:clamp(1.3rem,3.4vw,1.75rem);line-height:1.4;font-weight:700;
+  color:var(--brand-deep);letter-spacing:.06em;
+  padding-bottom:.6rem;border-bottom:2px solid color-mix(in srgb, var(--brand) 30%, transparent);width:100%;
+}
+.comm p{color:var(--muted);line-height:1.9;font-size:var(--fs-s);}
+
+/* definition box */
+.defbox{
+  background:var(--surface-soft);border:1px solid var(--line);border-radius:3px;
+  padding:clamp(1.5rem,4vw,2.25rem);display:flex;flex-direction:column;gap:.7rem;text-align:center;
+}
+.defbox .kicker{font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;color:var(--brand);}
+.defbox p{font-family:var(--serif);font-size:var(--fs-l);line-height:1.8;color:var(--brand-deep);font-weight:600;}
+.defbox p .em{color:var(--accent-deep);}
+
+/* ground note under comms */
+.ground-note{
+  background:var(--surface-soft);border:1px solid var(--line);border-left:4px solid var(--accent);
+  border-radius:3px;padding:clamp(1.3rem,3.5vw,1.9rem);
+}
+.ground-note p{font-family:var(--serif);font-size:var(--fs-m);line-height:1.95;color:var(--brand-deep);}
+
+/* target */
+.targets{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem;}
+.target{
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;
+  padding:1.4rem 1.35rem;display:flex;gap:.85rem;align-items:flex-start;box-shadow:var(--shadow);
+}
+.target .chk{
+  flex:none;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--brand);
+  display:grid;place-items:center;margin-top:.35rem;
+}
+.target .chk::after{content:"";width:.42rem;height:.72rem;border-right:2px solid var(--on-brand);border-bottom:2px solid var(--on-brand);transform:rotate(45deg) translate(-1px,-1px);}
+.target p{font-family:var(--serif);font-size:var(--fs-m);line-height:1.8;color:var(--brand-deep);}
+
+/* services */
+.services{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1.25rem;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:3px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);}
+.card header{
+  background:var(--brand);color:var(--on-brand);padding:1.1rem 1rem;text-align:center;
+  font-family:var(--serif);font-weight:700;font-size:var(--fs-m);line-height:1.6;letter-spacing:.06em;
+}
+.card header span{display:block;font-size:.78em;font-weight:400;letter-spacing:.16em;opacity:.85;}
+.card .body{padding:1.4rem 1.3rem;background:var(--surface-soft);flex:1;display:flex;flex-direction:column;gap:.9rem;}
+.card .body .line{font-family:var(--serif);font-size:var(--fs-m);line-height:1.8;color:var(--brand-deep);}
+.card .body p{color:var(--muted);line-height:1.95;}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem;}
+.step{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--brand);border-radius:3px;padding:1.5rem 1.35rem;display:flex;flex-direction:column;gap:.7rem;box-shadow:var(--shadow);}
+.step .n{font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;color:var(--brand);font-variant-numeric:tabular-nums;}
+.step h3{font-size:var(--fs-m);}
+.step p{color:var(--muted);line-height:1.95;}
+
+/* profile */
+.profile{
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;
+  padding:clamp(1.5rem,4vw,2.5rem);display:flex;flex-direction:column;gap:1.1rem;box-shadow:var(--shadow);
+}
+.profile .name{display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem 1rem;}
+.profile .name h3{font-size:var(--fs-l);}
+.profile .name .role{font-family:var(--util);font-size:var(--fs-xs);letter-spacing:.1em;color:var(--muted);}
+.profile p{color:var(--muted);line-height:2;}
+.social{display:flex;gap:.6rem;margin-left:auto;}
+.social a{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:2.5rem;height:2.5rem;border-radius:50%;flex:none;
+  background:var(--surface-soft);border:1px solid var(--line);
+  color:var(--brand);text-decoration:none;
+  transition:background .2s ease, color .2s ease, transform .2s ease, border-color .2s ease;
+}
+.social a:hover{background:var(--brand);border-color:var(--brand);color:var(--on-brand);transform:translateY(-2px);}
+.social a:focus-visible{outline:2px solid var(--brand);outline-offset:2px;}
+.social svg{width:1.05rem;height:1.05rem;fill:currentColor;display:block;}
+.social .note-mark{font-family:var(--util);font-weight:700;font-size:.64rem;letter-spacing:0;}
+@media (prefers-reduced-motion: reduce){ .social a{transition:none;} }
+
+.creds{display:flex;flex-wrap:wrap;gap:.5rem;}
+.creds span{
+  font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.08em;
+  color:var(--brand-deep);background:var(--surface-soft);border:1px solid var(--line);
+  padding:.3rem .8rem;border-radius:99px;
+}
+
+/* accordion (FAQ) */
+.accs{display:flex;flex-direction:column;gap:.75rem;}
+.acc{background:var(--surface);border:1px solid var(--line);border-radius:3px;overflow:hidden;box-shadow:var(--shadow);}
+.acc summary{
+  list-style:none;cursor:pointer;display:flex;align-items:center;gap:.9rem;
+  padding:1.05rem 1.25rem;font-family:var(--sans);font-weight:500;font-size:var(--fs-s);
+  color:var(--brand-deep);letter-spacing:.03em;line-height:1.8;
+}
+.acc summary::-webkit-details-marker{display:none;}
+.acc summary:hover{background:var(--surface-soft);}
+.acc summary:focus-visible{outline:2px solid var(--brand);outline-offset:-2px;}
+.acc-name{flex:1;}
+.faq .q{
+  flex:none;font-family:var(--serif);font-weight:700;font-size:var(--fs-m);color:var(--brand);
+  line-height:1;width:1.4em;
+}
+.acc summary::after{
+  content:"";width:.62rem;height:.62rem;flex:none;margin-left:.2rem;
+  border-right:2px solid var(--brand);border-bottom:2px solid var(--brand);
+  transform:rotate(45deg) translate(-2px,-2px);transition:transform .25s ease;
+}
+.acc[open] summary::after{transform:rotate(-135deg) translate(-2px,-2px);}
+.faq .acc-body{padding:0 clamp(1rem,3vw,1.5rem) 1.4rem;}
+.faq .acc-body p{color:var(--muted);line-height:1.95;border-top:1px dotted var(--line);padding-top:.9rem;}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.6rem;align-self:center;
+  font-family:var(--util);font-weight:700;letter-spacing:.1em;
+  border:0;border-radius:3px;text-decoration:none;
+  transition:background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.btn-primary{
+  background:var(--accent);color:var(--on-accent);
+  font-size:var(--fs-m);padding:1.3rem clamp(2rem,7vw,4rem);
+  box-shadow:var(--shadow-cta);
+}
+.btn-primary:hover{background:var(--accent-deep);transform:translateY(-2px);}
+.btn:focus-visible{outline:2px solid var(--brand-deep);outline-offset:3px;}
+
+/* cta */
+.cta{background:var(--band);border-top:1px solid color-mix(in srgb, var(--brand) 22%, transparent);}
+.cta p{color:color-mix(in srgb, var(--brand-deep) 82%, var(--ink));}
+.cta .invite{font-family:var(--serif);font-size:var(--fs-m);line-height:1.9;}
+.cta .assure{font-size:var(--fs-xs);color:var(--muted);letter-spacing:.06em;}
+.cta-mid{padding-block:clamp(2.5rem,5.5vw,3.5rem);border-bottom:1px solid color-mix(in srgb, var(--brand) 22%, transparent);}
+
+footer{background:var(--surface);border-top:1px solid var(--line);padding-block:2.25rem;}
+footer .inner{display:flex;flex-wrap:wrap;gap:.5rem 2rem;justify-content:space-between;align-items:baseline;color:var(--muted);font-family:var(--util);font-size:var(--fs-xs);letter-spacing:.1em;}
+
+/* contact form */
+.cform{
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;
+  padding:clamp(1.5rem,4vw,2.5rem);width:100%;text-align:left;
+  display:flex;flex-direction:column;gap:1.35rem;box-shadow:var(--shadow);
+}
+.field{display:flex;flex-direction:column;gap:.45rem;}
+.field > label{
+  font-family:var(--util);font-size:var(--fs-xs);font-weight:700;letter-spacing:.1em;
+  color:var(--brand-deep);display:flex;align-items:center;gap:.5rem;
+}
+.field .req,.field .opt{
+  font-size:.92em;font-weight:700;letter-spacing:.06em;
+  padding:.08rem .5rem;border-radius:2px;line-height:1.7;
+}
+.field .req{color:var(--on-accent);background:var(--accent);}
+.field .opt{color:var(--muted);background:var(--surface-soft);border:1px solid var(--line);}
+.field input,.field textarea{
+  font-family:var(--sans);font-size:var(--fs-s);line-height:1.8;color:var(--ink);
+  background:var(--ground);border:1px solid var(--line);border-radius:3px;
+  padding:.8rem .9rem;width:100%;
+  transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.field input::placeholder,.field textarea::placeholder{color:color-mix(in srgb, var(--muted) 55%, transparent);}
+.field input:focus,.field textarea:focus{
+  outline:none;background:var(--surface);border-color:var(--brand);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--brand) 18%, transparent);
+}
+.field textarea{resize:vertical;min-height:7.5rem;}
+.field .hint{font-size:var(--fs-xs);color:var(--muted);line-height:1.75;letter-spacing:.03em;}
+.cform .btn-primary{align-self:center;margin-top:.4rem;}
+.cform .btn-primary[disabled]{opacity:.55;pointer-events:none;}
+.cform .privacy{font-size:var(--fs-xs);color:var(--muted);text-align:center;line-height:1.8;}
+.fstate{display:none;padding:1.1rem 1.2rem;border-radius:3px;font-size:var(--fs-s);line-height:1.95;}
+.fstate.is-ok{display:block;background:var(--surface-soft);border:1px solid var(--brand);color:var(--brand-deep);}
+.fstate.is-ng{display:block;background:color-mix(in srgb, var(--accent) 12%, var(--surface));border:1px solid var(--accent);color:var(--accent-deep);}
+.fstate a{color:inherit;}
+@media (prefers-reduced-motion: reduce){ .field input,.field textarea{transition:none;} }
+
+/* sticky bar (mobile) */
+.sticky{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;display:none;
+  padding:.7rem var(--pad) calc(.7rem + env(safe-area-inset-bottom,0px));
+  background:color-mix(in srgb, var(--band) 92%, transparent);
+  border-top:1px solid color-mix(in srgb, var(--brand) 25%, transparent);
+  backdrop-filter:blur(8px);
+}
+.sticky .btn{width:100%;padding:.95rem 1rem;font-size:var(--fs-s);}
+@media (max-width:48rem){
+  .sticky{display:block;}
+  body{padding-bottom:4.5rem;}
+}
+
+.rv{opacity:0;transform:translateY(14px);transition:opacity .8s ease, transform .8s cubic-bezier(.22,.8,.28,1);}
+.rv.is-on{opacity:1;transform:none;}
+@media (prefers-reduced-motion: reduce){
+  .rv{opacity:1;transform:none;transition:none;}
+  .btn,.acc summary::after{transition:none;}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap stack gap-m" style="align-items:center;text-align:center">
+    <p class="brandline">Happy Happy Nico ｜ チームビルディング実装パッケージ</p>
+    <h1>極上の対話で、<br>チームが動く。</h1>
+    <p>機能するチームは、自然には生まれない。<br>意図的に、戦略的に。対話から、チームは動き出す。</p>
+    <p class="tags">#現場　#実践知　#研修では教えてくれない</p>
+  </div>
+</header>
+
+<section class="voice">
+  <div class="wrap stack gap-m">
+    <div class="stack gap-s rv" style="align-items:center;width:100%;text-align:center">
+      <p class="eyebrow">Voice</p>
+      <p class="voice-q">計画も、役割分担も、会議もある。<br>それでも、なぜか噛み合わない。</p>
+    </div>
+
+    <div class="compare rv">
+      <div class="cpanel bad">
+        <span class="tag">こんなこと、起きていませんか</span>
+        <ul>
+          <li>会議で意見を求めても沈黙が流れ、いつも同じ人だけが話している</li>
+          <li>部門をまたぐ問題に、誰も手を付けず放置される</li>
+          <li>期限ぎりぎりで「実は……」と問題が明かされる</li>
+          <li>「言った」「言わない」「聞いてない」の水掛け論が起きる</li>
+          <li>認識のズレによる手戻りややり直しが多い</li>
+        </ul>
+      </div>
+      <div class="cpanel good">
+        <span class="tag">対話が機能すると</span>
+        <ul>
+          <li>会議で「ちょっといいですか」と、いろんな人から意見が飛び交う</li>
+          <li>部門をまたぐ問題も、誰かが自然に拾いに行く</li>
+          <li>違和感に気づいた段階で、早めに共有される</li>
+          <li>その場で「これ、こういう意味で合ってます？」と確認し合う</li>
+          <li>早めに認識をすり合わせ、仕事がスムーズに前へ進む</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col bridge stack gap-s rv" style="width:100%;align-items:center;text-align:center">
+      <p class="serif-lead">この違いは、能力の差ではありません。<br>一人ひとりが違うからこそ、何もしなければズレていく。<br>そのズレを埋めるのが、対話です。</p>
+      <p class="punch">ズレは、直せる。対話を、意図的に設計すれば。</p>
+    </div>
+  </div>
+</section>
+
+<section class="count">
+  <div class="wrap inner rv">
+    <span class="bignum">4</span>
+    <div class="said">
+      <p>チームが機能するために必要なコミュニケーションを、<br>わたしは4つに整理しています。</p>
+      <div class="four">
+        <span>お互いを知る</span>
+        <span>目標を知る</span>
+        <span>約束事を知る</span>
+        <span>チーム状態を知る</span>
+      </div>
+      <small>この4つが積み上がり、循環することで、チームは動き出します。</small>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap stack gap-m">
+    <div class="col stack gap-s rv" style="width:100%">
+      <p class="eyebrow">4 Communications</p>
+      <h2>機能するチームを作る、4つのコミュニケーション</h2>
+    </div>
+    <div class="defbox rv">
+      <p class="kicker">機能するチームとは</p>
+      <p>異なる特性を持つ個々が、<span class="em">お互いを尊重し合いながら</span><br>共通の目標を達成するために<span class="em">協力し合う</span>チーム。</p>
+    </div>
+    <div class="comms rv">
+      <div class="comm">
+        <div class="toprow"><span class="n">1</span><span class="layer">土台</span></div>
+        <h3>お互いを知る</h3>
+        <p>組織や経験の壁を越え、チーム全員が「言いたいことを言い合える」人間関係の土台を作る。</p>
+      </div>
+      <div class="comm">
+        <div class="toprow"><span class="n">2</span><span class="layer">方向</span></div>
+        <h3>目標を知る</h3>
+        <p>チーム全員でプロジェクトと各々の業務目標を共創し、全員が目標へのベクトルを合わせる。</p>
+      </div>
+      <div class="comm">
+        <div class="toprow"><span class="n">3</span><span class="layer">行動</span></div>
+        <h3>約束事を知る</h3>
+        <p>チーム全員で「協力し合う」ための行動規範やルールを整え、協業を円滑にできるようにする。</p>
+      </div>
+      <div class="comm">
+        <div class="toprow"><span class="n">4</span><span class="layer">継続</span></div>
+        <h3>チーム状態を知る</h3>
+        <p>メンバー全員で「良かったこと」「困りごと」を共有し、チームをメンテナンスし続ける。</p>
+      </div>
+    </div>
+    <div class="ground-note rv">
+      <p>イベントや共同作業は、チームビルディングの入口にすぎません。<br>続けられるかどうか——これが、チームビルディング成功のカギです。<br>そして、その軸になるのが「対話」です。</p>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--surface-soft);border-block:1px solid var(--line)">
+  <div class="wrap stack gap-m">
+    <div class="col stack gap-s rv" style="width:100%">
+      <p class="eyebrow">For</p>
+      <h2>こんな方へ。</h2>
+    </div>
+    <div class="targets rv">
+      <div class="target"><span class="chk"></span><p>チーム内の意見交換を、もっと活発にしたい</p></div>
+      <div class="target"><span class="chk"></span><p>会議で、意見がどんどん出るようにしたい</p></div>
+      <div class="target"><span class="chk"></span><p>部門間の連携を、もっと良くしたい</p></div>
+      <div class="target"><span class="chk"></span><p>コミュニケーションエラーを、なくしたい</p></div>
+      <div class="target"><span class="chk"></span><p>心理的安全性を、なれ合いではなく本物にしたい</p></div>
+      <div class="target"><span class="chk"></span><p>とにかく、みんなで楽しく仕事してほしい</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap stack gap-m">
+    <div class="col stack gap-s rv" style="width:100%">
+      <p class="eyebrow">Services</p>
+      <h2>3つのサービス</h2>
+    </div>
+    <div class="services rv">
+      <div class="card">
+        <header><span>STEP 01</span>チームビルディング講座</header>
+        <div class="body">
+          <p class="line">知識を掴む、半日間。</p>
+          <p>なぜチームビルディングが必要なのか。なぜ4つのコミュニケーションが必要なのか。ただの体験で終わらせない「意味」と「理論」を持ち帰ります。</p>
+        </div>
+      </div>
+      <div class="card">
+        <header><span>STEP 02</span>チームビルディングワークショップ</header>
+        <div class="body">
+          <p class="line">土台を作る、半日間。</p>
+          <p>4つのコミュニケーションを軸に、チームの状態に応じて実践の場を設計。お互いを知り、目標を合わせるところから始めます。</p>
+        </div>
+      </div>
+      <div class="card">
+        <header><span>STEP 03</span>マンスリーミーティング</header>
+        <div class="body">
+          <p class="line">育て続ける、月に一度。</p>
+          <p>機能するチームに育てるための振り返りの場。イベントで終わらせず、機能するチームに向けてコーチングし、伴走します。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta cta-mid">
+  <div class="wrap col stack gap-s rv" style="align-items:center;text-align:center">
+    <p class="invite">まずは、話を聞いてみたい方へ。</p>
+    <a class="btn btn-primary" href="#contact">無料相談はこちら<span class="arw">→</span></a>
+  </div>
+</section>
+
+<section style="background:var(--surface-soft);border-block:1px solid var(--line)">
+  <div class="wrap narrow stack gap-m">
+    <div class="stack gap-s rv">
+      <p class="eyebrow">Profile</p>
+      <h2>末岡 良章</h2>
+    </div>
+    <div class="profile rv">
+      <div class="name">
+        <h3>末岡 良章</h3>
+        <span class="role">エンジニア ✕ 組織風土改革の二刀流</span>
+        <div class="social">
+          <a href="https://note.com/happyhappynico" target="_blank" rel="noopener" aria-label="note"><span class="note-mark">note</span></a>
+        </div>
+      </div>
+      <p>エンジニアとして半導体製造装置・デジタルカメラ・内視鏡の開発に携わったのち、組織風土改革の道へ。現場で技術者として悩み、もがいた経験があるからこそ、チームの「噛み合わなさ」を現場の目線で捉え直します。仕組みだけでは動かないチームを、対話の力で動くチームへ。</p>
+      <div class="creds">
+        <span>ICF認定コーチ（ACC）</span>
+        <span>プロティアン・キャリア ファシリテーター</span>
+        <span>組織風土改革</span>
+        <span>心理的安全性</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap stack gap-m">
+    <div class="col stack gap-s rv" style="width:100%">
+      <p class="eyebrow">Flow</p>
+      <h2>ご相談から、実装まで。</h2>
+    </div>
+    <div class="flow rv">
+      <div class="step">
+        <span class="n">STEP 01</span>
+        <h3>無料相談</h3>
+        <p>オンラインでお話をうかがいます。資料の準備は不要です。いまチームで起きていることを、そのままお聞かせください。</p>
+      </div>
+      <div class="step">
+        <span class="n">STEP 02</span>
+        <h3>ご提案</h3>
+        <p>チームの状態にあわせて、どこから始めるとよいかをご提案します。ひとつのサービスだけでも構いません。</p>
+      </div>
+      <div class="step">
+        <span class="n">STEP 03</span>
+        <h3>実装と伴走</h3>
+        <p>講座・ワークショップ・マンスリーミーティングを組み合わせ、4つのコミュニケーションを現場に届け続けます。形骸化させないところまでご一緒します。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq" style="background:var(--surface-soft);border-block:1px solid var(--line)">
+  <div class="wrap narrow stack gap-m">
+    <div class="stack gap-s rv">
+      <p class="eyebrow">FAQ</p>
+      <h2>よくあるご質問</h2>
+    </div>
+    <div class="accs rv">
+      <details class="acc">
+        <summary><span class="q">Q</span><span class="acc-name">チームビルディングに、まだ取り組めていないのですが相談できますか？</span></summary>
+        <div class="acc-body"><p>もちろんです。これから始めるチームにも、すでに取り組んでいるチームにも、状況にあわせて設計します。まずは現状をお聞かせください。</p></div>
+      </details>
+      <details class="acc">
+        <summary><span class="q">Q</span><span class="acc-name">3つのサービスのうち、ひとつだけの利用もできますか？</span></summary>
+        <div class="acc-body"><p>はい、ひとつからご利用いただけます。どこから始めるとよいかは、無料相談の中で一緒に考えます。</p></div>
+      </details>
+      <details class="acc">
+        <summary><span class="q">Q</span><span class="acc-name">対象となる人数や規模の目安はありますか？</span></summary>
+        <div class="acc-body"><p>少人数のチームから、部門をまたぐ大きな組織まで対応しています。規模に応じて進め方を変えてご提案します。</p></div>
+      </details>
+      <details class="acc">
+        <summary><span class="q">Q</span><span class="acc-name">オンラインでも実施できますか？</span></summary>
+        <div class="acc-body"><p>はい。講座もマンスリーミーティングも、オンラインで実施できます。対面をご希望の場合もご相談ください。</p></div>
+      </details>
+      <details class="acc">
+        <summary><span class="q">Q</span><span class="acc-name">チームビルディングは、一度やれば終わりですか？</span></summary>
+        <div class="acc-body"><p>いいえ。一度の取り組みだけでは、チームは少しずつ元に戻ってしまいます。だからこそ、振り返りを続けるマンスリーミーティングで、機能するチームへと育て続けます。</p></div>
+      </details>
+      <details class="acc">
+        <summary><span class="q">Q</span><span class="acc-name">費用はどのくらいかかりますか？</span></summary>
+        <div class="acc-body"><p>内容と規模によって変わります。ご要望をうかがったうえでお見積りをお出しします。無料相談の中で、おおよその目安もお伝えできます。</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="wrap narrow stack gap-m">
+    <div class="stack gap-s rv" style="align-items:center;text-align:center">
+      <p class="eyebrow" style="color:var(--brand-deep)">Contact</p>
+      <h2>無料相談のお申し込み</h2>
+      <p class="invite" style="max-width:31rem">みなさんのチームで起きていること、困っていることを、聞かせてください。</p>
+    </div>
+
+    <div class="fstate" id="form-state" role="status" aria-live="polite"></div>
+
+    <form class="cform rv" id="contact-form" action="https://formspree.io/f/xyeyprzo" method="POST">
+      <input type="hidden" name="_subject" value="【チームビルディング実装パッケージ】無料相談のお申し込み">
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+
+      <div class="field">
+        <label for="f-name">お名前 <span class="req">必須</span></label>
+        <input id="f-name" name="お名前" type="text" required autocomplete="name" placeholder="末岡 良章">
+      </div>
+
+      <div class="field">
+        <label for="f-company">会社名・団体名 <span class="opt">任意</span></label>
+        <input id="f-company" name="会社名" type="text" autocomplete="organization" placeholder="株式会社ハッピーハッピーニコ">
+      </div>
+
+      <div class="field">
+        <label for="f-email">メールアドレス <span class="req">必須</span></label>
+        <input id="f-email" name="メールアドレス" type="email" required autocomplete="email" placeholder="example@company.co.jp">
+        <p class="hint">こちらのアドレスにご返信します。お間違いのないようご確認ください。</p>
+      </div>
+
+      <div class="field">
+        <label for="f-message">ご相談内容 <span class="req">必須</span></label>
+        <textarea id="f-message" name="ご相談内容" required placeholder="いまチームで起きていること、お困りのこと、聞いてみたいことなど。箇条書きでも構いません。"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="f-schedule">打ち合わせ希望日時 <span class="opt">任意</span></label>
+        <textarea id="f-schedule" name="打ち合わせ希望日時" style="min-height:5rem" placeholder="例）10月10日（木）14:00〜16:00 / 10月12日（土）午前中"></textarea>
+        <p class="hint">候補をいくつかいただけると調整がスムーズです。未記入でも構いません。こちらから候補をお送りします。</p>
+      </div>
+
+      <button class="btn btn-primary" type="submit" id="form-submit">送信する<span class="arw">→</span></button>
+      <p class="privacy">いただいた情報は、ご相談の対応のみに使用します。<br>営業目的での連絡や第三者への提供はいたしません。</p>
+    </form>
+
+    <p class="assure" style="text-align:center">オンラインでお話をうかがいます。ご相談だけでも構いません。</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap inner">
+    <span>Happy Happy Nico ｜ 末岡良章</span>
+    <span>組織風土改革 ／ チームビルディング支援 ／ コーチング</span>
+  </div>
+</footer>
+
+<div class="sticky">
+  <a class="btn btn-primary" href="#contact">無料相談はこちら</a>
+</div>
+
+<script>
+(function(){
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      e.target.classList.add('is-on');
+      io.unobserve(e.target);
+    });
+  }, {threshold:.12, rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+})();
+
+(function(){
+  var form = document.getElementById('contact-form');
+  var state = document.getElementById('form-state');
+  var btn = document.getElementById('form-submit');
+  if(!form || !state || !btn || !window.fetch) return;
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    state.className = 'fstate';
+    state.textContent = '';
+    btn.disabled = true;
+    btn.textContent = '送信中…';
+
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(function(res){
+      if(res.ok){
+        form.style.display = 'none';
+        state.className = 'fstate is-ok';
+        state.textContent = 'お申し込みありがとうございます。内容を確認のうえ、いただいたメールアドレスへご返信します。しばらくお待ちください。';
+        state.scrollIntoView({behavior:'smooth', block:'center'});
+      } else {
+        return res.json().then(function(d){
+          throw new Error(d && d.errors ? d.errors.map(function(x){return x.message;}).join(' / ') : '');
+        });
+      }
+    }).catch(function(err){
+      state.className = 'fstate is-ng';
+      state.innerHTML = '送信できませんでした。お手数ですが、時間をおいて再度お試しください。'
+        + '<br>くり返し送信できない場合は、note からご連絡ください。'
+        + (err && err.message ? '<br><small>（' + err.message + '）</small>' : '');
+      btn.disabled = false;
+      btn.innerHTML = '送信する<span class="arw">→</span>';
+    });
+  });
+})();
+</script>
+</body>
+</html>
